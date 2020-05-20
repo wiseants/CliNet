@@ -73,6 +73,7 @@
     <Compile Include="Cores\Commands\ExampleCommand.cs" />
     <Compile Include="Cores\Commands\ExitCommand.cs" />
     <Compile Include="Cores\Commands\IncreaseCommand.cs" />
+    <Compile Include="Cores\Commands\ParseCommand.cs" />
     <Compile Include="Cores\Commands\ServiceCommand.cs" />
     <Compile Include="Cores\Services\ExampleService.cs" />
     <Compile Include="Interfaces\IAction.cs" />
