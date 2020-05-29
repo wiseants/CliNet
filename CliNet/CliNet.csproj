@@ -76,6 +76,12 @@
     <Compile Include="Cores\Commands\ParseCommand.cs" />
     <Compile Include="Cores\Commands\ServiceCommand.cs" />
     <Compile Include="Cores\Services\ExampleService.cs" />
+    <Compile Include="Grammars\CSharpLexer.cs" />
+    <Compile Include="Grammars\CSharpParser.cs" />
+    <Compile Include="Grammars\CSharpParserBaseListener.cs" />
+    <Compile Include="Grammars\CSharpParserBaseVisitor.cs" />
+    <Compile Include="Grammars\CSharpParserListener.cs" />
+    <Compile Include="Grammars\CSharpParserVisitor.cs" />
     <Compile Include="Interfaces\IAction.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -83,14 +89,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <Antlr4 Include="Grammars\CSharpLexer.g4">
-      <Generator>MSBuild:Compile</Generator>
-      <CustomToolNamespace>CliNet.CSharpLexer</CustomToolNamespace>
-    </Antlr4>
-    <Antlr4 Include="Grammars\CSharpParser.g4">
-      <Generator>MSBuild:Compile</Generator>
-      <CustomToolNamespace>CliNet.CSharpParser</CustomToolNamespace>
-    </Antlr4>
+    <None Include="Grammars\CSharpLexer.g4" />
+    <None Include="Grammars\CSharpLexer.tokens" />
+    <None Include="Grammars\CSharpParser.g4" />
+    <None Include="Grammars\CSharpParser.tokens" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

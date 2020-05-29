@@ -6,9 +6,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CliNet.CSharpLexer;
 
 namespace CliNet.Cores.Commands
 {
+    [Verb("parse", HelpText = "Parse to C# code.")]
     public class ParseCommand : IAction
     {
         public bool IsValid => true;
@@ -26,11 +28,11 @@ namespace CliNet.Cores.Commands
         public int Action()
         {
             var target = new AntlrInputStream(FileFullPath);
-            var lexer = new CSharpLexer(target);
+            var lexer = new CSharpLexer.CSharpLexer(target);
             var tokens = new CommonTokenStream(lexer);
-            CSharpParser parser = new CSharpParser(tokens) { BuildParseTree = true };
+            CSharpParser.CSharpParser parser = new CSharpParser.CSharpParser(tokens) { BuildParseTree = true };
 
-            CSharpParser.LiteralContext result = parser.literal();
+            CSharpParser.CSharpParser.LiteralContext result = parser.literal();
 
             Console.WriteLine(result.ToStringTree());
 
