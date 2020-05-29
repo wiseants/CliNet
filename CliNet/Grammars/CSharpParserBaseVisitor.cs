@@ -19,21 +19,20 @@
 // Ambiguous reference in cref attribute
 #pragma warning disable 419
 
-namespace CliNet.CSharpParser {
-using Antlr4.Runtime.Misc;
-using Antlr4.Runtime.Tree;
-using IToken = Antlr4.Runtime.IToken;
-using ParserRuleContext = Antlr4.Runtime.ParserRuleContext;
+namespace CliNet.CSharpParser
+{
+    using Antlr4.Runtime.Misc;
+    using Antlr4.Runtime.Tree;
 
-/// <summary>
-/// This class provides an empty implementation of <see cref="ICSharpParserVisitor{Result}"/>,
-/// which can be extended to create a visitor which only needs to handle a subset
-/// of the available methods.
-/// </summary>
-/// <typeparam name="Result">The return type of the visit operation.</typeparam>
-[System.CodeDom.Compiler.GeneratedCode("ANTLR", "4.6.6")]
-[System.CLSCompliant(false)]
-public partial class CSharpParserBaseVisitor<Result> : AbstractParseTreeVisitor<Result>, ICSharpParserVisitor<Result> {
+    /// <summary>
+    /// This class provides an empty implementation of <see cref="ICSharpParserVisitor{Result}"/>,
+    /// which can be extended to create a visitor which only needs to handle a subset
+    /// of the available methods.
+    /// </summary>
+    /// <typeparam name="Result">The return type of the visit operation.</typeparam>
+    //[System.CLSCompliant(false)]
+    [System.CodeDom.Compiler.GeneratedCode("ANTLR", "4.6.6")]
+	public partial class CSharpParserBaseVisitor<Result> : AbstractParseTreeVisitor<Result>, ICSharpParserVisitor<Result> {
 	/// <summary>
 	/// Visit a parse tree produced by the <c>literalAccessExpression</c>
 	/// labeled alternative in <see cref="CSharpParser.primary_expression_start"/>.

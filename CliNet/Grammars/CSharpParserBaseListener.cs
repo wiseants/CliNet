@@ -19,22 +19,21 @@
 // Ambiguous reference in cref attribute
 #pragma warning disable 419
 
-namespace CliNet.CSharpParser {
+namespace CliNet.CSharpParser
+{
+    using Antlr4.Runtime.Misc;
+    using IErrorNode = Antlr4.Runtime.Tree.IErrorNode;
+    using ITerminalNode = Antlr4.Runtime.Tree.ITerminalNode;
+    using ParserRuleContext = Antlr4.Runtime.ParserRuleContext;
 
-using Antlr4.Runtime.Misc;
-using IErrorNode = Antlr4.Runtime.Tree.IErrorNode;
-using ITerminalNode = Antlr4.Runtime.Tree.ITerminalNode;
-using IToken = Antlr4.Runtime.IToken;
-using ParserRuleContext = Antlr4.Runtime.ParserRuleContext;
-
-/// <summary>
-/// This class provides an empty implementation of <see cref="ICSharpParserListener"/>,
-/// which can be extended to create a listener which only needs to handle a subset
-/// of the available methods.
-/// </summary>
-[System.CodeDom.Compiler.GeneratedCode("ANTLR", "4.6.6")]
-[System.CLSCompliant(false)]
-public partial class CSharpParserBaseListener : ICSharpParserListener {
+    /// <summary>
+    /// This class provides an empty implementation of <see cref="ICSharpParserListener"/>,
+    /// which can be extended to create a listener which only needs to handle a subset
+    /// of the available methods.
+    /// </summary>
+    //[System.CLSCompliant(false)]
+    [System.CodeDom.Compiler.GeneratedCode("ANTLR", "4.6.6")]
+    public partial class CSharpParserBaseListener : ICSharpParserListener {
 	/// <summary>
 	/// Enter a parse tree produced by the <c>literalAccessExpression</c>
 	/// labeled alternative in <see cref="CSharpParser.primary_expression_start"/>.

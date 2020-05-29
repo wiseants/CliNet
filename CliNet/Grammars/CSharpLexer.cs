@@ -26,9 +26,9 @@ namespace CliNet.CSharpLexer
     using Antlr4.Runtime.Misc;
     using System.Collections.Generic;
 
+    //[System.CLSCompliant(false)]
     [System.CodeDom.Compiler.GeneratedCode("ANTLR", "4.6.6")]
-	[System.CLSCompliant(false)]
-	public partial class CSharpLexer : Lexer {
+    public partial class CSharpLexer : Lexer {
 	public const int
 		BYTE_ORDER_MARK=1, SINGLE_LINE_DOC_COMMENT=2, DELIMITED_DOC_COMMENT=3, 
 		SINGLE_LINE_COMMENT=4, DELIMITED_COMMENT=5, WHITESPACES=6, SHARP=7, ABSTRACT=8, 

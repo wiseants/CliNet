@@ -19,18 +19,18 @@
 // Ambiguous reference in cref attribute
 #pragma warning disable 419
 
-namespace CliNet.CSharpParser {
-using Antlr4.Runtime.Misc;
-using IParseTreeListener = Antlr4.Runtime.Tree.IParseTreeListener;
-using IToken = Antlr4.Runtime.IToken;
+namespace CliNet.CSharpParser
+{
+    using Antlr4.Runtime.Misc;
+    using IParseTreeListener = Antlr4.Runtime.Tree.IParseTreeListener;
 
-/// <summary>
-/// This interface defines a complete listener for a parse tree produced by
-/// <see cref="CSharpParser"/>.
-/// </summary>
-[System.CodeDom.Compiler.GeneratedCode("ANTLR", "4.6.6")]
-[System.CLSCompliant(false)]
-public interface ICSharpParserListener : IParseTreeListener {
+    /// <summary>
+    /// This interface defines a complete listener for a parse tree produced by
+    /// <see cref="CSharpParser"/>.
+    /// </summary>
+    //[System.CLSCompliant(false)]
+    [System.CodeDom.Compiler.GeneratedCode("ANTLR", "4.6.6")]
+    public interface ICSharpParserListener : IParseTreeListener {
 	/// <summary>
 	/// Enter a parse tree produced by the <c>literalAccessExpression</c>
 	/// labeled alternative in <see cref="CSharpParser.primary_expression_start"/>.

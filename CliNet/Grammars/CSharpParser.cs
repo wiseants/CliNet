@@ -26,9 +26,9 @@ namespace CliNet.CSharpParser
     using Antlr4.Runtime.Misc;
     using Antlr4.Runtime.Tree;
 
+    //[System.CLSCompliant(false)]
     [System.CodeDom.Compiler.GeneratedCode("ANTLR", "4.6.6")]
-[System.CLSCompliant(false)]
-public partial class CSharpParser : Parser {
+    public partial class CSharpParser : Parser {
 	public const int
 		BYTE_ORDER_MARK=1, SINGLE_LINE_DOC_COMMENT=2, DELIMITED_DOC_COMMENT=3, 
 		SINGLE_LINE_COMMENT=4, DELIMITED_COMMENT=5, WHITESPACES=6, SHARP=7, ABSTRACT=8, 
