@@ -91,7 +91,8 @@
     <Compile Include="Cores\Commands\ParseCommand.cs" />
     <Compile Include="Cores\Commands\ServiceCommand.cs" />
     <Compile Include="Cores\Services\ExampleService.cs" />
-    <Compile Include="Grammars\Listeners\CSharpParserListener.cs" />
+    <Compile Include="Grammars\Listeners\ParseErrorListener.cs" />
+    <Compile Include="Grammars\Visitors\MethodBodyVisitor.cs" />
     <Compile Include="Interfaces\IAction.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -99,6 +100,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <Antlr4 Include="Grammars\CPP14.g4">
+      <Generator>MSBuild:Compile</Generator>
+      <CustomToolNamespace>CliNet.CPP14</CustomToolNamespace>
+    </Antlr4>
     <None Include="packages.config" />
     <Antlr4 Include="Grammars\CSharpLexer.g4">
       <Generator>MSBuild:Compile</Generator>
@@ -130,6 +135,11 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Targets\CppTest.txt" />
+    <Content Include="Targets\CSharpTest.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
