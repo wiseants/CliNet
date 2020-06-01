@@ -15,6 +15,21 @@
     <Deterministic>true</Deterministic>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -76,12 +91,7 @@
     <Compile Include="Cores\Commands\ParseCommand.cs" />
     <Compile Include="Cores\Commands\ServiceCommand.cs" />
     <Compile Include="Cores\Services\ExampleService.cs" />
-    <Compile Include="Grammars\CSharpLexer.cs" />
-    <Compile Include="Grammars\CSharpParser.cs" />
-    <Compile Include="Grammars\CSharpParserBaseListener.cs" />
-    <Compile Include="Grammars\CSharpParserBaseVisitor.cs" />
-    <Compile Include="Grammars\CSharpParserListener.cs" />
-    <Compile Include="Grammars\CSharpParserVisitor.cs" />
+    <Compile Include="Grammars\Listeners\CSharpParserListener.cs" />
     <Compile Include="Interfaces\IAction.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -89,17 +99,19 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-	<None Include="packages.config" />
-	<None Include="Grammars\CSharpLexer.g4" />
-	<!--<Antlr4 Include="Grammars\CSharpLexer.g4">
+    <None Include="packages.config" />
+    <Antlr4 Include="Grammars\CSharpLexer.g4">
       <Generator>MSBuild:Compile</Generator>
-      <CustomToolNamespace>RootNamespace.Folder</CustomToolNamespace>
-    </Antlr4>-->
-	<None Include="Grammars\CSharpParser.g4" />
-	<!--<Antlr4 Include="Grammars\CSharpParser.g4">
+      <CustomToolNamespace>CliNet.CSharp</CustomToolNamespace>
+      <Listener>True</Listener>
+      <Visitor>True</Visitor>
+    </Antlr4>
+    <Antlr4 Include="Grammars\CSharpParser.g4">
       <Generator>MSBuild:Compile</Generator>
-      <CustomToolNamespace>RootNamespace.Folder</CustomToolNamespace>
-    </Antlr4>-->
+      <CustomToolNamespace>CliNet.CSharp</CustomToolNamespace>
+      <Listener>True</Listener>
+      <Visitor>True</Visitor>
+    </Antlr4>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Utility\Utility.csproj">
@@ -107,7 +119,18 @@
       <Name>Utility</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.6.1 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

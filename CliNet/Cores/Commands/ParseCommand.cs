@@ -1,5 +1,6 @@
 ﻿using Antlr4.Runtime;
 using CliNet.CSharp;
+using CliNet.Grammars.Listeners;
 using CliNet.Interfaces;
 using CommandLine;
 using System;
@@ -23,10 +24,14 @@ namespace CliNet.Cores.Commands
 
         public int Action()
         {
-            var target = new AntlrInputStream(FileFullPath);
+            var target = new AntlrInputStream(@FileFullPath);
             var lexer = new CSharpLexer(target);
             var tokens = new CommonTokenStream(lexer);
             CSharpParser parser = new CSharpParser(tokens) { BuildParseTree = true };
+
+            CSharpParserListener listener = new CSharpParserListener();
+
+            parser.AddParseListener(listener);
 
             CSharpParser.LiteralContext result = parser.literal();
 
