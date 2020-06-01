@@ -19,7 +19,7 @@
 // Ambiguous reference in cref attribute
 #pragma warning disable 419
 
-namespace CliNet.CSharpLexer
+namespace CliNet.CSharp
 {
     using Antlr4.Runtime;
     using Antlr4.Runtime.Atn;

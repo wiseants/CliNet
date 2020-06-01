@@ -23,11 +23,11 @@ namespace CliNet.Cores.Commands
         public int Action()
         {
             var target = new AntlrInputStream(FileFullPath);
-            var lexer = new CSharpLexer.CSharpLexer(target);
+            var lexer = new CSharp.CSharpLexer(target);
             var tokens = new CommonTokenStream(lexer);
-            CSharpParser.CSharpParser parser = new CSharpParser.CSharpParser(tokens) { BuildParseTree = true };
+            CSharp.CSharpParser parser = new CSharp.CSharpParser(tokens) { BuildParseTree = true };
 
-            CSharpParser.CSharpParser.LiteralContext result = parser.literal();
+            CSharp.CSharpParser.LiteralContext result = parser.literal();
 
             Console.WriteLine(result.ToStringTree());
 
