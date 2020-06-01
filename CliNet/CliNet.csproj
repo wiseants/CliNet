@@ -104,6 +104,10 @@
       <Generator>MSBuild:Compile</Generator>
       <CustomToolNamespace>CliNet.CPP14</CustomToolNamespace>
     </Antlr4>
+    <Antlr4 Include="Grammars\Expr.g4">
+      <Generator>MSBuild:Compile</Generator>
+      <CustomToolNamespace>CliNet.Expr</CustomToolNamespace>
+    </Antlr4>
     <None Include="packages.config" />
     <Antlr4 Include="Grammars\CSharpLexer.g4">
       <Generator>MSBuild:Compile</Generator>
@@ -140,6 +144,7 @@
   <ItemGroup>
     <Content Include="Targets\CppTest.txt" />
     <Content Include="Targets\CSharpTest.txt" />
+    <Content Include="Targets\ExprTest.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

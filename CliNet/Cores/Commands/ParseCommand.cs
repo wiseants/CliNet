@@ -1,9 +1,13 @@
 ﻿using Antlr4.Runtime;
 using CliNet.CSharp;
+using CliNet.CPP14;
 using CliNet.Grammars.Listeners;
+using CliNet.Grammars.Visitors;
 using CliNet.Interfaces;
 using CommandLine;
 using System;
+using System.IO;
+using CliNet.Expr;
 
 namespace CliNet.Cores.Commands
 {
@@ -16,7 +20,7 @@ namespace CliNet.Cores.Commands
         /// 필수 옵션.
         /// </summary>
         [Option('f', "file", Required = true, HelpText = "file-name.")]
-        public string FileFullPath
+        public string @FileFullPath
         {
             get;
             set;
@@ -24,18 +28,18 @@ namespace CliNet.Cores.Commands
 
         public int Action()
         {
-            var target = new AntlrInputStream(@FileFullPath);
-            var lexer = new CSharpLexer(target);
+            var target = new AntlrInputStream(File.ReadAllText(@FileFullPath));
+            var lexer = new ExprLexer(target);
             var tokens = new CommonTokenStream(lexer);
-            CSharpParser parser = new CSharpParser(tokens) { BuildParseTree = true };
 
-            CSharpParserListener listener = new CSharpParserListener();
+            ExprParser parser = new ExprParser(tokens) { BuildParseTree = true };
+            parser.AddErrorListener(new ParseErrorListener());
 
-            parser.AddParseListener(listener);
+            MethodBodyVisitor visitor = new MethodBodyVisitor();
+            visitor.Visit(parser.expr());
 
-            CSharpParser.LiteralContext result = parser.literal();
 
-            Console.WriteLine(result.ToStringTree());
+            Console.WriteLine(parser.prog().ToStringTree());
 
             return 1;
         }
