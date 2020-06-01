@@ -85,6 +85,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bootstrapper.cs" />
     <Compile Include="Cores\Commands\ExampleCommand.cs" />
     <Compile Include="Cores\Commands\ExitCommand.cs" />
     <Compile Include="Cores\Commands\IncreaseCommand.cs" />
