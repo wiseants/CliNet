@@ -1,13 +1,11 @@
 ﻿using Antlr4.Runtime;
-using CliNet.CSharp;
-using CliNet.CPP14;
 using CliNet.Grammars.Listeners;
 using CliNet.Grammars.Visitors;
 using CliNet.Interfaces;
 using CommandLine;
 using System;
 using System.IO;
-using CliNet.Expr;
+using Unity.Resolution;
 
 namespace CliNet.Cores.Commands
 {
@@ -28,18 +26,24 @@ namespace CliNet.Cores.Commands
 
         public int Action()
         {
-            var target = new AntlrInputStream(File.ReadAllText(@FileFullPath));
-            var lexer = new ExprLexer(target);
-            var tokens = new CommonTokenStream(lexer);
+            var targetStream = new AntlrInputStream(File.ReadAllText(@FileFullPath));
+            var lexer = Bootstrapper.Instance.CreateContainer<Lexer>(new ResolverOverride[]
+            {
+                new ParameterOverride("input", targetStream)
+            });
 
-            ExprParser parser = new ExprParser(tokens) { BuildParseTree = true };
+            var tokens = new CommonTokenStream(lexer);
+            var parser = Bootstrapper.Instance.CreateContainer<Antlr4.Runtime.Parser>(new ResolverOverride[]
+            {
+                new ParameterOverride("input", tokens)
+            });
+            parser.BuildParseTree = true;
             parser.AddErrorListener(new ParseErrorListener());
 
             MethodBodyVisitor visitor = new MethodBodyVisitor();
-            visitor.Visit(parser.expr());
+            visitor.Visit(parser.Context);
 
-
-            Console.WriteLine(parser.prog().ToStringTree());
+            Console.WriteLine(parser.Context.ToStringTree());
 
             return 1;
         }
