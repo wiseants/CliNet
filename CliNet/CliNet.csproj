@@ -99,8 +99,11 @@
     <Compile Include="Cores\Commands\ServiceCommand.cs" />
     <Compile Include="Cores\Services\ExampleService.cs" />
     <Compile Include="Grammars\Listeners\ParseErrorListener.cs" />
-    <Compile Include="Grammars\Visitors\MethodBodyVisitor.cs" />
+    <Compile Include="Grammars\Visitors\DeclarationStatementVisitor.cs" />
+    <Compile Include="Grammars\Visitors\DeclarationVisitor.cs" />
+    <Compile Include="Grammars\Visitors\TerminalVisitor.cs" />
     <Compile Include="Interfaces\IAction.cs" />
+    <Compile Include="Models\VariableInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResponseObserver.cs" />
@@ -111,23 +114,7 @@
       <Generator>MSBuild:Compile</Generator>
       <CustomToolNamespace>CliNet.CPP14</CustomToolNamespace>
     </Antlr4>
-    <Antlr4 Include="Grammars\Expr.g4">
-      <Generator>MSBuild:Compile</Generator>
-      <CustomToolNamespace>CliNet.Expr</CustomToolNamespace>
-    </Antlr4>
     <None Include="packages.config" />
-    <Antlr4 Include="Grammars\CSharpLexer.g4">
-      <Generator>MSBuild:Compile</Generator>
-      <CustomToolNamespace>CliNet.CSharp</CustomToolNamespace>
-      <Listener>True</Listener>
-      <Visitor>True</Visitor>
-    </Antlr4>
-    <Antlr4 Include="Grammars\CSharpParser.g4">
-      <Generator>MSBuild:Compile</Generator>
-      <CustomToolNamespace>CliNet.CSharp</CustomToolNamespace>
-      <Listener>True</Listener>
-      <Visitor>True</Visitor>
-    </Antlr4>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Utility\Utility.csproj">

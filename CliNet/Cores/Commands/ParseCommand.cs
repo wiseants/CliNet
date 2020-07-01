@@ -1,9 +1,12 @@
 ﻿using Antlr4.Runtime;
+using CliNet.CPP14;
 using CliNet.Grammars.Listeners;
 using CliNet.Grammars.Visitors;
 using CliNet.Interfaces;
+using CliNet.Models;
 using CommandLine;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Unity.Resolution;
 
@@ -38,12 +41,12 @@ namespace CliNet.Cores.Commands
                 new ParameterOverride("input", tokens)
             });
             parser.BuildParseTree = true;
-            parser.AddErrorListener(new ParseErrorListener());
 
-            MethodBodyVisitor visitor = new MethodBodyVisitor();
-            visitor.Visit(parser.Context);
-
-            Console.WriteLine(parser.Context.ToStringTree());
+            if (parser is CPP14Parser cpp14Parser)
+            {
+                DeclarationVisitor declareVisitor = new DeclarationVisitor();
+                declareVisitor.Visit(cpp14Parser.translationunit());
+            }
 
             return 1;
         }
