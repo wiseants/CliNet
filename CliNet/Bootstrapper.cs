@@ -82,14 +82,14 @@ namespace CliNet
 
         private void BuildContainer()
         {
-            //container.RegisterType<Lexer, ExprLexer>("Expr");
-            //container.RegisterType<Lexer, CPP14Lexer>("CPP14");
-            container.RegisterType<Lexer, CSharpLexer>("CSharp");
+            //container.RegisterType<Lexer, ExprLexer>();
+            //container.RegisterType<Lexer, CPP14Lexer>();
+            container.RegisterType<Lexer, CSharpLexer>();
             //container.RegisterType<Lexer, CPP14Lexer>();
 
-            //container.RegisterType<Parser, ExprParser>("Expr");
-            //container.RegisterType<Parser, CPP14Parser>("CPP14");
-            container.RegisterType<Parser, CSharpParser>("CSharp");
+            //container.RegisterType<Parser, ExprParser>();
+            //container.RegisterType<Parser, CPP14Parser>();
+            container.RegisterType<Parser, CSharpParser>();
             //container.RegisterType<Parser, CPP14Parser>();
         }
 
