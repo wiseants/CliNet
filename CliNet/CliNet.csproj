@@ -114,6 +114,14 @@
       <Generator>MSBuild:Compile</Generator>
       <CustomToolNamespace>CliNet.CPP14</CustomToolNamespace>
     </Antlr4>
+    <Antlr4 Include="Grammars\CSharpLexer.g4">
+	      <Generator>MSBuild:Compile</Generator>
+      <CustomToolNamespace>CliNet.CSharp</CustomToolNamespace>
+    </Antlr4>
+    <Antlr4 Include="Grammars\CSharpParser.g4">
+	      <Generator>MSBuild:Compile</Generator>
+      <CustomToolNamespace>CliNet.CSharp</CustomToolNamespace>
+    </Antlr4>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
