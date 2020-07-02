@@ -98,7 +98,6 @@
     <Compile Include="Cores\Commands\ParseCommand.cs" />
     <Compile Include="Cores\Commands\ServiceCommand.cs" />
     <Compile Include="Cores\Services\ExampleService.cs" />
-    <Compile Include="Antlr\Listeners\ParseErrorListener.cs" />
     <Compile Include="Antlr\Visitors\DeclarationStatementVisitor.cs" />
     <Compile Include="Antlr\Visitors\DeclarationVisitor.cs" />
     <Compile Include="Antlr\Visitors\TerminalVisitor.cs" />
