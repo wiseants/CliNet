@@ -1,12 +1,8 @@
 ﻿using Antlr4.Runtime;
-using CliNet.CPP14;
-using CliNet.Grammars.Listeners;
-using CliNet.Grammars.Visitors;
+using CliNet.Antlr.Grammars.CPP14;
+using CliNet.Antrl.Visitors;
 using CliNet.Interfaces;
-using CliNet.Models;
 using CommandLine;
-using System;
-using System.Collections.Generic;
 using System.IO;
 using Unity.Resolution;
 
