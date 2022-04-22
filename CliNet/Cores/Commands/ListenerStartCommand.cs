@@ -3,6 +3,8 @@ using CliNet.Interfaces;
 using CommandLine;
 using Common.Tools;
 using NLog;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace CliNet.Cores.Commands
@@ -48,8 +50,11 @@ namespace CliNet.Cores.Commands
             };
             lister.Received += (sender, buffer) =>
             {
-                string data = Encoding.UTF8.GetString(buffer, 0, buffer.Length);
-                LogManager.GetCurrentClassLogger().Info(data);
+                string message = string.Join("|", new List<byte>(buffer).Select(x => string.Format("{0}", x.ToString("X"))));
+                if (string.IsNullOrEmpty(message) == false)
+                {
+                    LogManager.GetCurrentClassLogger().Info(message);
+                }
             };
 
             ThreadManager.Instance.Add(Key, lister);
