@@ -5,6 +5,8 @@ using Common.Tools;
 using NLog;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
 
 namespace CliNet.Cores.Commands
@@ -37,6 +39,13 @@ namespace CliNet.Cores.Commands
             set;
         } = 1097;
 
+        [Option('d', "destination port", Required = false, HelpText = "Destination Port number.")]
+        public int DestinationPortNo
+        {
+            get;
+            set;
+        } = 1098;
+
         #endregion
 
         #region Public methods
@@ -50,6 +59,16 @@ namespace CliNet.Cores.Commands
             };
             lister.Received += (sender, buffer) =>
             {
+                using (Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp))
+                {
+                    IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), DestinationPortNo);
+                    socket.Connect(endPoint);
+
+                    bool isResult = socket.SendTo(buffer, endPoint) > 0;
+
+                    socket.Close();
+                }
+
                 string message = string.Join("|", new List<byte>(buffer).Select(x => string.Format("{0}", x.ToString("X"))));
                 if (string.IsNullOrEmpty(message) == false)
                 {
