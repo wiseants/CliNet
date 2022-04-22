@@ -1,7 +1,6 @@
 ﻿// https://www.csharpstudy.com/net/article/12
 
 using Common.Interfaces;
-using NLog;
 using System;
 using System.Net;
 using System.Net.Sockets;
@@ -91,9 +90,6 @@ namespace Common.Tools
             {
                 _listenThread.Abort();
                 _listenThread = null;
-
-                Console.WriteLine("Stop to listen.");
-                LogManager.GetCurrentClassLogger().Info("Stop to listen.");
             }
         }
 
@@ -119,9 +115,6 @@ namespace Common.Tools
                 udp.JoinMulticastGroup(multicastIP);
 
                 IPEndPoint remoteEP = new IPEndPoint(IPAddress.Any, 0);
-
-                Console.WriteLine("Start to listen.");
-                LogManager.GetCurrentClassLogger().Info("Start to listen.");
 
                 while (true)
                 {

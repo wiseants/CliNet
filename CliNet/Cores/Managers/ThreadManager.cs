@@ -1,7 +1,9 @@
 ﻿using Common.Interfaces;
 using Common.Templates;
-using System.Linq;
+using NLog;
+using System;
 using System.Collections.Concurrent;
+using System.Linq;
 
 namespace CliNet.Cores.Managers
 {
@@ -9,7 +11,7 @@ namespace CliNet.Cores.Managers
     {
         #region Fields
 
-        private ConcurrentDictionary<string, IThreadable> _threadMap = new ConcurrentDictionary<string, IThreadable>();
+        private readonly ConcurrentDictionary<string, IThreadable> _threadMap = new ConcurrentDictionary<string, IThreadable>();
 
         #endregion
 
@@ -23,7 +25,11 @@ namespace CliNet.Cores.Managers
             }
 
             thread.Start();
-            _ = _threadMap.TryAdd(key, thread);
+            if (_threadMap.TryAdd(key, thread))
+            {
+                Console.WriteLine("Start to listen.");
+                LogManager.GetCurrentClassLogger().Info("Start to listen.");
+            }
         }
 
         public void Remove(string key)
@@ -33,6 +39,9 @@ namespace CliNet.Cores.Managers
                 if (_threadMap.TryRemove(key, out IThreadable beforeThread))
                 {
                     beforeThread.Stop();
+
+                    Console.WriteLine("Stop to listen.");
+                    LogManager.GetCurrentClassLogger().Info("Stop to listen.");
                 }
             }
         }
