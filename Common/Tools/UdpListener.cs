@@ -1,5 +1,6 @@
 ﻿// https://www.csharpstudy.com/net/article/12
 
+using Common.Interfaces;
 using System;
 using System.Net;
 using System.Net.Sockets;
@@ -10,7 +11,7 @@ namespace Common.Tools
     /// <summary>
     /// UDP 멀티캐스트 리스너 클래스.
     /// </summary>
-    public class UdpListener : IDisposable
+    public class UdpListener : IThreadable, IDisposable
     {
         #region Events
 

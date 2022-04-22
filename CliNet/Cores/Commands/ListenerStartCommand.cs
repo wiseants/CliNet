@@ -1,19 +1,25 @@
-﻿using CliNet.Interfaces;
+﻿using CliNet.Cores.Managers;
+using CliNet.Interfaces;
 using CommandLine;
 using Common.Tools;
 using System;
-using System.Net;
-using System.Net.Sockets;
 using System.Text;
 
 namespace CliNet.Cores.Commands
 {
-    [Verb("listen", HelpText = "Listen to Multicast UPD.")]
-    public class MultiListenCommand : IAction
+    [Verb("start", HelpText = "Start to Multicast UPD Listen.")]
+    public class ListenerStartCommand : IAction
     {
         public bool IsValid => true;
 
-        [Option('i', "ip", Required = false, HelpText = "Source IP address.")]
+        [Option('i', "identifier", Required = false, HelpText = "Listener Identifier")]
+        public string Key
+        {
+            get;
+            set;
+        } = "default";
+
+        [Option('a', "address", Required = false, HelpText = "Source IP address.")]
         public string SenderIpAddress
         {
             get;
@@ -40,7 +46,7 @@ namespace CliNet.Cores.Commands
                 Console.WriteLine(data);
             };
 
-            lister.Start();
+            ThreadManager.Instance.Add(Key, lister);
 
             return 0;
         }

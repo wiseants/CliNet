@@ -84,7 +84,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cores\Commands\ExitCommand.cs" />
-    <Compile Include="Cores\Commands\MultiListenCommand.cs" />
+    <Compile Include="Cores\Commands\ListenerStartCommand.cs" />
+    <Compile Include="Cores\Commands\ListenerStopCommand.cs" />
+    <Compile Include="Cores\Managers\ThreadManager.cs" />
     <Compile Include="Interfaces\IAction.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
