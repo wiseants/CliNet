@@ -15,4 +15,11 @@ namespace Common
     /// <param name="sender">발송자.</param>
     /// <param name="param">파라미터 오브젝트.</param>
     public delegate bool RefActionEventHandler(object sender, ref string message, ref object param);
+
+    /// <summary>
+    /// 버퍼로 데이터를 받은 액션 델리게이트.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="buffer"></param>
+    public delegate void ReceivedHandler(object sender, byte[] buffer);
 }

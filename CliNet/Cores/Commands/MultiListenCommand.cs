@@ -1,5 +1,6 @@
 ﻿using CliNet.Interfaces;
 using CommandLine;
+using Common.Tools;
 using System;
 using System.Net;
 using System.Net.Sockets;
@@ -28,28 +29,18 @@ namespace CliNet.Cores.Commands
 
         public int Action()
         {
-            // (1) UdpClient 객체 성성
-            UdpClient udp = new UdpClient();
-
-            // (2) UDP 로컬 IP/포트에 바인딩            
-            // udp.Client.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.ReuseAddress, true);
-            IPEndPoint localEP = new IPEndPoint(IPAddress.Any, SenderPortNo);
-            udp.Client.Bind(localEP);
-
-            // (3) Multicast 그룹에 Join
-            IPAddress multicastIP = IPAddress.Parse(SenderIpAddress);
-            udp.JoinMulticastGroup(multicastIP);
-
-            IPEndPoint remoteEP = new IPEndPoint(IPAddress.Any, 0);
-
-            while (!Console.KeyAvailable)
+            UdpListener lister = new UdpListener()
             {
-                // (4) Multicast 수신
-                byte[] buff = udp.Receive(ref remoteEP);
-
-                string data = Encoding.UTF8.GetString(buff, 0, buff.Length);
+                IpAddress = SenderIpAddress,
+                PortNo = SenderPortNo
+            };
+            lister.Received += (sender, buffer) =>
+            {
+                string data = Encoding.UTF8.GetString(buffer, 0, buffer.Length);
                 Console.WriteLine(data);
-            }
+            };
+
+            lister.Start();
 
             return 0;
         }
