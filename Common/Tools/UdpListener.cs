@@ -90,6 +90,8 @@ namespace Common.Tools
             {
                 _listenThread.Abort();
                 _listenThread = null;
+
+                Console.WriteLine("Stop to listen.");
             }
         }
 
@@ -116,6 +118,7 @@ namespace Common.Tools
 
                 IPEndPoint remoteEP = new IPEndPoint(IPAddress.Any, 0);
 
+                Console.WriteLine("Start to listen.");
                 while (true)
                 {
                     byte[] buff = udp.Receive(ref remoteEP);

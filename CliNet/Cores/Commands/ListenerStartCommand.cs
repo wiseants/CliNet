@@ -2,7 +2,7 @@
 using CliNet.Interfaces;
 using CommandLine;
 using Common.Tools;
-using System;
+using NLog;
 using System.Text;
 
 namespace CliNet.Cores.Commands
@@ -10,6 +10,8 @@ namespace CliNet.Cores.Commands
     [Verb("start", HelpText = "Start to Multicast UPD Listen.")]
     public class ListenerStartCommand : IAction
     {
+        #region Properties
+
         public bool IsValid => true;
 
         [Option('i', "identifier", Required = false, HelpText = "Listener Identifier")]
@@ -33,6 +35,10 @@ namespace CliNet.Cores.Commands
             set;
         } = 1097;
 
+        #endregion
+
+        #region Public methods
+
         public int Action()
         {
             UdpListener lister = new UdpListener()
@@ -43,12 +49,14 @@ namespace CliNet.Cores.Commands
             lister.Received += (sender, buffer) =>
             {
                 string data = Encoding.UTF8.GetString(buffer, 0, buffer.Length);
-                Console.WriteLine(data);
+                LogManager.GetCurrentClassLogger().Info(data);
             };
 
             ThreadManager.Instance.Add(Key, lister);
 
             return 0;
         }
+
+        #endregion
     }
 }

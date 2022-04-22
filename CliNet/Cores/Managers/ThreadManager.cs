@@ -6,20 +6,23 @@ namespace CliNet.Cores.Managers
 {
     public class ThreadManager : Singleton<ThreadManager>
     {
-        public ConcurrentDictionary<string, IThreadable> _threadMap = new ConcurrentDictionary<string, IThreadable>();
+        #region Fields
+
+        private ConcurrentDictionary<string, IThreadable> _threadMap = new ConcurrentDictionary<string, IThreadable>();
+
+        #endregion
+
+        #region Public methods
 
         public void Add(string key, IThreadable thread)
         {
-            if (_threadMap.ContainsKey(key))
+            if (_threadMap.TryGetValue(key, out IThreadable beforeThread))
             {
-                if (_threadMap.TryGetValue(key, out IThreadable beforeThread))
-                {
-                    beforeThread.Stop();
-                }
-
-                thread.Start();
-                _ = _threadMap.TryAdd(key, thread);
+                beforeThread.Stop();
             }
+
+            thread.Start();
+            _ = _threadMap.TryAdd(key, thread);
         }
 
         public void Remove(string key)
@@ -32,5 +35,7 @@ namespace CliNet.Cores.Managers
                 }
             }
         }
+
+        #endregion
     }
 }

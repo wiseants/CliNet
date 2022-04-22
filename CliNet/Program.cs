@@ -1,5 +1,7 @@
 ﻿using CliNet.Interfaces;
 using CommandLine;
+using NLog;
+using NLog.Config;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,10 +10,19 @@ namespace CliNet
 {
     public class Program
     {
+        #region Fields
+
+        public static readonly string LOG_LAYOUT = "${longdate} | ${uppercase:${level}} | ${logger} | ${message}";
+        public static readonly string TRACE_LAYOUT = "${uppercase:${level}} | ${message} | ${logger}";
+        public static readonly string SRTM_CACHE_FOLDER_NAME = "srtm_caches";
         public static readonly char[] DELIMITER_CHARS = { ' ' };
+
+        #endregion
 
         public static void Main(string[] args)
         {
+            ConfigurationForLog();
+
             // IAction 구현 클래스를 전부 사용.
             IEnumerable<Type> types = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(s => s.GetTypes())
@@ -50,5 +61,32 @@ namespace CliNet
                 }
             } while (isContinuous == true);
         }
+
+        #region Private methods
+
+        /// <summary>
+        /// 로그 셋팅.
+        /// </summary>
+        private static void ConfigurationForLog()
+        {
+            var config = new LoggingConfiguration();
+
+            // 콘솔 로그 룰.     
+            config.AddRule(LogLevel.Trace, LogLevel.Fatal, new NLog.Targets.DebuggerTarget()
+            {
+                Layout = TRACE_LAYOUT
+            });
+
+            // 파일 로그 룰.
+            config.AddRule(LogLevel.Info, LogLevel.Fatal, new NLog.Targets.FileTarget()
+            {
+                FileName = string.Format(@"{0}${{shortdate}}.log", Constant.APPLICATION_FOLDER_PATH),
+                Layout = LOG_LAYOUT
+            });
+
+            LogManager.Configuration = config;
+        }
+
+        #endregion
     }
 }

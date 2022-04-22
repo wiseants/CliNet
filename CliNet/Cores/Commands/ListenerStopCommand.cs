@@ -7,6 +7,8 @@ namespace CliNet.Cores.Commands
     [Verb("stop", HelpText = "Stop to Multicast UPD Listen.")]
     public class ListenerStopCommand : IAction
     {
+        #region Properties
+
         public bool IsValid => true;
 
         [Option('i', "identifier", Required = false, HelpText = "Listener Identifier")]
@@ -16,11 +18,17 @@ namespace CliNet.Cores.Commands
             set;
         } = "default";
 
+        #endregion
+
+        #region Public methods
+
         public int Action()
         {
             ThreadManager.Instance.Remove(Key);
 
             return 0;
         }
+
+        #endregion
     }
 }
