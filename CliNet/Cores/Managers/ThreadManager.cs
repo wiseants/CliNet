@@ -19,7 +19,7 @@ namespace CliNet.Cores.Managers
 
         public void Add(string key, IThreadable thread)
         {
-            if (_threadMap.TryGetValue(key, out IThreadable beforeThread))
+            if (_threadMap.TryRemove(key, out IThreadable beforeThread))
             {
                 beforeThread.Stop();
             }
@@ -48,10 +48,7 @@ namespace CliNet.Cores.Managers
 
         public void Release()
         {
-            _threadMap.ToList().ForEach(x =>
-            {
-                x.Value.Stop();
-            });
+            _threadMap.Keys.ToList().ForEach(x => Remove(x));
         }
 
         #endregion

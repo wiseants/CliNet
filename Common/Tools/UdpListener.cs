@@ -24,6 +24,8 @@ namespace Common.Tools
 
         #region Fields
 
+        public static readonly int ABORT_DELAY_MS = 100;
+
         private Thread _listenThread;
 
         #endregion
@@ -89,6 +91,7 @@ namespace Common.Tools
             if (_listenThread != null)
             {
                 _listenThread.Abort();
+                Thread.Sleep(ABORT_DELAY_MS);
                 _listenThread = null;
             }
         }
