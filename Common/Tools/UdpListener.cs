@@ -1,21 +1,29 @@
-﻿using System;
+﻿// https://www.csharpstudy.com/net/article/12
+
+using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 
 namespace Common.Tools
 {
-    public class UdpListener
+    /// <summary>
+    /// UDP 멀티캐스트 리스너 클래스.
+    /// </summary>
+    public class UdpListener : IDisposable
     {
         #region Events
 
+        /// <summary>
+        /// 데이터 받기 이벤트.
+        /// </summary>
         public ReceivedHandler Received;
 
         #endregion
 
         #region Fields
 
-        private readonly Thread _listenThread;
+        private Thread _listenThread;
 
         #endregion
 
@@ -23,25 +31,24 @@ namespace Common.Tools
 
         public UdpListener()
         {
-            _listenThread = new Thread(ListenProc);
         }
 
         #endregion
 
         #region Properties
 
-        public bool IsRunning
-        {
-            get;
-            private set;
-        }
-
+        /// <summary>
+        /// IP 주소.
+        /// </summary>
         public string IpAddress
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// 포트번호.
+        /// </summary>
         public int PortNo
         {
             get;
@@ -52,19 +59,37 @@ namespace Common.Tools
 
         #region Public methods
 
+        /// <summary>
+        /// 리스너 시작.
+        /// </summary>
         public void Start()
         {
             Start(IpAddress, PortNo);
         }
 
+        /// <summary>
+        /// 리스너 시작.
+        /// </summary>
+        /// <param name="ipAddress">IP 주소.</param>
+        /// <param name="portNo">포트번호.</param>
         public void Start(string ipAddress, int portNo)
         {
+            Stop();
+
+            _listenThread = new Thread(ListenProc);
             _listenThread.Start(new Tuple<string, int>(ipAddress, portNo));
         }
 
+        /// <summary>
+        /// 리스너 중지.
+        /// </summary>
         public void Stop()
         {
-            IsRunning = false;
+            if (_listenThread != null)
+            {
+                _listenThread.Abort();
+                _listenThread = null;
+            }
         }
 
         #endregion
@@ -82,21 +107,16 @@ namespace Common.Tools
 
             using (UdpClient udp = new UdpClient())
             {
-                // (2) UDP 로컬 IP/포트에 바인딩            
-                // udp.Client.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.ReuseAddress, true);
                 IPEndPoint localEP = new IPEndPoint(IPAddress.Any, paramTuple.Item2);
                 udp.Client.Bind(localEP);
 
-                // (3) Multicast 그룹에 Join
                 IPAddress multicastIP = IPAddress.Parse(paramTuple.Item1);
                 udp.JoinMulticastGroup(multicastIP);
 
                 IPEndPoint remoteEP = new IPEndPoint(IPAddress.Any, 0);
 
-                IsRunning = true;
-                while (IsRunning)
+                while (true)
                 {
-                    // (4) Multicast 수신
                     byte[] buff = udp.Receive(ref remoteEP);
                     if (buff != null && buff.Length > 0)
                     {
@@ -107,5 +127,15 @@ namespace Common.Tools
         }
 
         #endregion
+
+        #region IDisposable implementations
+
+        public void Dispose()
+        {
+            Stop();
+        }
+
+        #endregion
+
     }
 }
