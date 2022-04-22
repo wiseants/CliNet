@@ -1,5 +1,6 @@
 ﻿using Common.Interfaces;
 using Common.Templates;
+using System.Linq;
 using System.Collections.Concurrent;
 
 namespace CliNet.Cores.Managers
@@ -34,6 +35,14 @@ namespace CliNet.Cores.Managers
                     beforeThread.Stop();
                 }
             }
+        }
+
+        public void Release()
+        {
+            _threadMap.ToList().ForEach(x =>
+            {
+                x.Value.Stop();
+            });
         }
 
         #endregion

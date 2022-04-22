@@ -1,4 +1,5 @@
-﻿using CliNet.Interfaces;
+﻿using CliNet.Cores.Managers;
+using CliNet.Interfaces;
 using CommandLine;
 using NLog;
 using NLog.Config;
@@ -14,7 +15,6 @@ namespace CliNet
 
         public static readonly string LOG_LAYOUT = "${longdate} | ${uppercase:${level}} | ${logger} | ${message}";
         public static readonly string TRACE_LAYOUT = "${uppercase:${level}} | ${message} | ${logger}";
-        public static readonly string SRTM_CACHE_FOLDER_NAME = "srtm_caches";
         public static readonly char[] DELIMITER_CHARS = { ' ' };
 
         #endregion
@@ -60,6 +60,8 @@ namespace CliNet
                     Console.WriteLine(commandResult < 0 ? "Error" : "Ok");
                 }
             } while (isContinuous == true);
+
+            ThreadManager.Instance.Release();
         }
 
         #region Private methods
@@ -80,7 +82,7 @@ namespace CliNet
             // 파일 로그 룰.
             config.AddRule(LogLevel.Info, LogLevel.Fatal, new NLog.Targets.FileTarget()
             {
-                FileName = string.Format(@"{0}${{shortdate}}.log", Constant.APPLICATION_FOLDER_PATH),
+                FileName = string.Format(@"{0}${{shortdate}}.log", Constant.LOG_FOLDER_PATH),
                 Layout = LOG_LAYOUT
             });
 
