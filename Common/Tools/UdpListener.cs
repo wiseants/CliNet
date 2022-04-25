@@ -1,10 +1,12 @@
 ﻿// https://www.csharpstudy.com/net/article/12
 
 using Common.Interfaces;
+using Common.Models;
 using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Common.Tools
 {
@@ -27,6 +29,7 @@ namespace Common.Tools
         public static readonly int ABORT_DELAY_MS = 100;
 
         private Thread _listenThread;
+        private CancellationTokenSource _tokenSource;
 
         #endregion
 
@@ -58,6 +61,12 @@ namespace Common.Tools
             set;
         }
 
+        public bool IsRunning
+        {
+            get;
+            private set;
+        }
+
         #endregion
 
         #region Public methods
@@ -79,7 +88,7 @@ namespace Common.Tools
         {
             Stop();
 
-            _listenThread = new Thread(ListenProc);
+            _listenThread = new Thread(ListenProcAsync);
             _listenThread.Start(new Tuple<string, int>(ipAddress, portNo));
         }
 
@@ -90,8 +99,14 @@ namespace Common.Tools
         {
             if (_listenThread != null)
             {
+                IsRunning = false;
+
+                _tokenSource.CancelAfter(500);
+                _tokenSource.Dispose();
+                _tokenSource = null;
+
                 _listenThread.Abort();
-                Thread.Sleep(ABORT_DELAY_MS);
+                Thread.Sleep(100);
                 _listenThread = null;
             }
         }
@@ -100,7 +115,7 @@ namespace Common.Tools
 
         #region Event handlers
 
-        private void ListenProc(object param)
+        private void ListenProcAsync(object param)
         {
             if (param is Tuple<string, int> == false)
             {
@@ -117,16 +132,32 @@ namespace Common.Tools
                 IPAddress multicastIP = IPAddress.Parse(paramTuple.Item1);
                 udp.JoinMulticastGroup(multicastIP);
 
-                IPEndPoint remoteEP = new IPEndPoint(IPAddress.Any, 0);
+                _tokenSource = new CancellationTokenSource();
 
-                while (true)
+                IsRunning = true;
+                while (IsRunning)
                 {
-                    byte[] buff = udp.Receive(ref remoteEP);
-                    if (buff != null && buff.Length > 0)
+                    bool isRecieved = false;
+                    udp.ReceiveAsync().WithCancellation(_tokenSource.Token).ContinueWith(x =>
                     {
-                        Received?.Invoke(this, buff);
+                        if (x != null && x.Result != null)
+                        {
+                            if (x.Result.Buffer != null && x.Result.Buffer.Length > 0)
+                            {
+                                Received?.Invoke(this, x.Result.Buffer);
+                            }
+                        }
+
+                        isRecieved = true;
+                    });
+
+                    while(isRecieved == false)
+                    {
+                        Thread.Sleep(50);
                     }
                 }
+
+                udp.Close();
             }
         }
 
