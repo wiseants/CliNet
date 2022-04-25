@@ -27,7 +27,7 @@ namespace Common.Tools
         #region Fields
 
         public static readonly int ABORT_DELAY_MS = 100;
-        public static readonly int TIMER_DELAY_MS = 50;
+        public static readonly int THREAD_DELAY_MS = 50;
 
         private Thread _listenThread;
         private CancellationTokenSource _tokenSource;
@@ -164,7 +164,7 @@ namespace Common.Tools
 
                 while (isRecieved == false)
                 {
-                    Thread.Sleep(TIMER_DELAY_MS);
+                    Thread.Sleep(THREAD_DELAY_MS);
                 }
             }
         }
