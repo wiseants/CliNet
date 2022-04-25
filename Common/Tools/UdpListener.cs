@@ -1,7 +1,7 @@
 ﻿// https://www.csharpstudy.com/net/article/12
 
 using Common.Interfaces;
-using Common.Models;
+using NLog;
 using System;
 using System.Net;
 using System.Net.Sockets;
@@ -27,6 +27,7 @@ namespace Common.Tools
         #region Fields
 
         public static readonly int ABORT_DELAY_MS = 100;
+        public static readonly int TIMER_DELAY_MS = 50;
 
         private Thread _listenThread;
         private CancellationTokenSource _tokenSource;
@@ -61,12 +62,6 @@ namespace Common.Tools
             set;
         }
 
-        public bool IsRunning
-        {
-            get;
-            private set;
-        }
-
         #endregion
 
         #region Public methods
@@ -88,6 +83,11 @@ namespace Common.Tools
         {
             Stop();
 
+            if (string.IsNullOrEmpty(ipAddress))
+            {
+                return;
+            }
+
             _listenThread = new Thread(ListenProcAsync);
             _listenThread.Start(new Tuple<string, int>(ipAddress, portNo));
         }
@@ -99,14 +99,12 @@ namespace Common.Tools
         {
             if (_listenThread != null)
             {
-                IsRunning = false;
-
-                _tokenSource.CancelAfter(500);
+                _tokenSource.CancelAfter(ABORT_DELAY_MS);
                 _tokenSource.Dispose();
                 _tokenSource = null;
 
                 _listenThread.Abort();
-                Thread.Sleep(100);
+                Thread.Sleep(ABORT_DELAY_MS);
                 _listenThread = null;
             }
         }
@@ -126,38 +124,48 @@ namespace Common.Tools
 
             using (UdpClient udp = new UdpClient())
             {
-                IPEndPoint localEP = new IPEndPoint(IPAddress.Any, paramTuple.Item2);
-                udp.Client.Bind(localEP);
-
-                IPAddress multicastIP = IPAddress.Parse(paramTuple.Item1);
-                udp.JoinMulticastGroup(multicastIP);
-
-                _tokenSource = new CancellationTokenSource();
-
-                IsRunning = true;
-                while (IsRunning)
+                try
                 {
-                    bool isRecieved = false;
-                    udp.ReceiveAsync().WithCancellation(_tokenSource.Token).ContinueWith(x =>
-                    {
-                        if (x != null && x.Result != null)
-                        {
-                            if (x.Result.Buffer != null && x.Result.Buffer.Length > 0)
-                            {
-                                Received?.Invoke(this, x.Result.Buffer);
-                            }
-                        }
+                    IPEndPoint localEP = new IPEndPoint(IPAddress.Any, paramTuple.Item2);
+                    udp.Client.Bind(localEP);
 
-                        isRecieved = true;
-                    });
+                    IPAddress multicastIP = IPAddress.Parse(paramTuple.Item1);
+                    udp.JoinMulticastGroup(multicastIP);
 
-                    while(isRecieved == false)
-                    {
-                        Thread.Sleep(50);
-                    }
+                    _tokenSource = new CancellationTokenSource();
+
+                    ReceivedLoop(udp, _tokenSource.Token);
                 }
+                catch (ThreadAbortException) { }
+                catch (Exception ex)
+                {
+                    LogManager.GetCurrentClassLogger().Error("Exception occurred. Message({0})", ex.Message);
+                }
+            }
+        }
 
-                udp.Close();
+        private void ReceivedLoop(UdpClient udp, CancellationToken cancellationToken)
+        {
+            while (true)
+            {
+                bool isRecieved = false;
+                udp.ReceiveAsync().WithCancellation(cancellationToken).ContinueWith(x =>
+                {
+                    if (x != null && x.Status != TaskStatus.Faulted)
+                    {
+                        if (x.Result != null && x.Result.Buffer != null && x.Result.Buffer.Length > 0)
+                        {
+                            Received?.Invoke(this, x.Result.Buffer);
+                        }
+                    }
+
+                    isRecieved = true;
+                });
+
+                while (isRecieved == false)
+                {
+                    Thread.Sleep(TIMER_DELAY_MS);
+                }
             }
         }
 
