@@ -1,6 +1,7 @@
 ﻿// https://github.com/Astn/JSON-RPC.NET/wiki/Getting-Started-(Sockets) 인용.
 
 using AustinHarris.JsonRpc;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,7 +17,6 @@ namespace Common.Network
     {
         #region Fields
 
-        private readonly List<object> serviceArray = new List<object>();
         private SocketListener socketListener = null;
         private CancellationTokenSource tokenSource = null;
 
@@ -32,7 +32,11 @@ namespace Common.Network
             }
         }
 
-        public ICollection<JsonRpcService> Services { get; set; } = new List<JsonRpcService>();
+        public ICollection<JsonRpcService> Services
+        {
+            get;
+            set; 
+        } = new List<JsonRpcService>();
 
         #endregion
 
@@ -59,7 +63,7 @@ namespace Common.Network
             socketListener = new SocketListener(IPAddress.Parse("127.0.0.1"), port);
             tokenSource = new CancellationTokenSource();
 
-            socketListener.StartAsync(port, (writer, line) =>
+            socketListener.StartAsync((writer, line) =>
             {
                 var async = new JsonRpcStateAsync(rpcResultHandler, writer)
                 {
@@ -69,7 +73,7 @@ namespace Common.Network
                 JsonRpcProcessor.Process(async, writer);
             }, tokenSource.Token);
 
-            Console.WriteLine("Service started.");
+            LogManager.GetCurrentClassLogger().Info("Service started.");
         }
 
         public void Stop()
@@ -82,7 +86,7 @@ namespace Common.Network
 
             tokenSource.Cancel();
 
-            Console.WriteLine("Service stopped.");
+            LogManager.GetCurrentClassLogger().Info("Service stopped.");
         }
 
         #endregion

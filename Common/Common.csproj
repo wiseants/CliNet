@@ -158,6 +158,7 @@
     <Compile Include="Tools\GeometryTool.cs" />
     <Compile Include="Tools\IPAddressTool.cs" />
     <Compile Include="Tools\JsonTool.cs" />
+    <Compile Include="Tools\RpcTool.cs" />
     <Compile Include="Tools\ReflectionTool.cs" />
     <Compile Include="Tools\StringTool.cs" />
     <Compile Include="Tools\SystemTool.cs" />

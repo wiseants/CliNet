@@ -22,13 +22,15 @@ namespace CliNet.Cores.Managers
             if (_threadMap.TryRemove(key, out IThreadable beforeThread))
             {
                 beforeThread.Stop();
+
+                Console.WriteLine("Remove a thread.");
+                LogManager.GetCurrentClassLogger().Info("Remove a thread.");
             }
 
             thread.Start();
             if (_threadMap.TryAdd(key, thread))
             {
-                Console.WriteLine("Start to listen.");
-                LogManager.GetCurrentClassLogger().Info("Start to listen.");
+                LogManager.GetCurrentClassLogger().Info("Add a thread.");
             }
         }
 
@@ -40,8 +42,8 @@ namespace CliNet.Cores.Managers
                 {
                     beforeThread.Stop();
 
-                    Console.WriteLine("Stop to listen.");
-                    LogManager.GetCurrentClassLogger().Info("Stop to listen.");
+                    Console.WriteLine("Remove a thread.");
+                    LogManager.GetCurrentClassLogger().Info("Remove a thread.");
                 }
             }
         }

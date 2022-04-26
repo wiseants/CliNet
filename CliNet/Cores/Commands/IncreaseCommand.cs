@@ -1,11 +1,8 @@
-﻿using AustinHarris.JsonRpc;
-using CliNet.Interfaces;
+﻿using CliNet.Interfaces;
 using CommandLine;
-using Common.Network;
+using Common.Tools;
 using System;
 using System.Net;
-using System.Reactive;
-using System.Text;
 
 namespace CliNetCore.Cores.Commands
 {
@@ -13,6 +10,13 @@ namespace CliNetCore.Cores.Commands
     public class IncreaseCommand : IAction
     {
         public bool IsValid => true;
+
+        [Option('p', "port", Required = false, HelpText = "Service port number.")]
+        public int Port
+        {
+            get;
+            set;
+        } = 8055;
 
         [Option('t', "target", Required = true, HelpText = "target number.")]
         public int TargetNumber
@@ -23,20 +27,12 @@ namespace CliNetCore.Cores.Commands
 
         public int Action()
         {
-            JsonRpcClient client = new JsonRpcClient(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8055), Encoding.UTF8);
+            new IPEndPoint(IPAddress.Parse("127.0.0.1"), Port).Command<int>("Incr", TargetNumber).ContinueWith(x =>
+            {
+                Console.WriteLine(string.Format("{0}", x.Result));
+            });
 
-            IObservable<JsonResponse<int>> result = client.Invoke<int>("Decr", new object[] { TargetNumber });
-            result.Subscribe(new AnonymousObserver<JsonResponse<int>>(
-                x =>
-                {
-                    Console.WriteLine(string.Format("{0}", x.Result));
-                },
-                (ex) =>
-                {
-                    Console.WriteLine(string.Format("Exception occurred. Message({0})", ex.Message));
-                }, () => { })).Dispose();
-
-            return 1;
+            return 0;
         }
     }
 }

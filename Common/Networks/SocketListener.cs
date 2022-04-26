@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace Common.Network
 {
     /// <summary>
-    /// 비동기 소케 리스너.
+    /// 비동기 소켓 리스너.
     /// </summary>
     public class SocketListener : TcpListener
     {
@@ -37,7 +37,7 @@ namespace Common.Network
 
         #region Public methods
 
-        public async void StartAsync(int listenPort, Action<StreamWriter, string> handleRequest, CancellationToken token)
+        public async void StartAsync(Action<StreamWriter, string> handleRequest, CancellationToken token)
         {
             Start();
 

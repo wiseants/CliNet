@@ -1,10 +1,8 @@
 ﻿using AustinHarris.JsonRpc;
 using Common.Network;
+using NLog;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CliNet.Cores.Managers
 {
@@ -37,11 +35,22 @@ namespace CliNet.Cores.Managers
                                 .Where(p => typeof(JsonRpcService).IsAssignableFrom(p) && p.IsAbstract == false)
                                 .Select(type => (JsonRpcService)Activator.CreateInstance(type)).ToList()
                         };
+
+                        LogManager.GetCurrentClassLogger().Info("Found {0} services.", Instance.Services.Count);
                     }
                 }
 
                 return _instance;
             }
+        }
+
+        #endregion
+
+        #region Public methods
+
+        public void Release()
+        {
+            Instance.Stop();
         }
 
         #endregion
