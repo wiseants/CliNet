@@ -3,6 +3,7 @@ using CliNet.Interfaces;
 using CommandLine;
 using Common.Tools;
 using NLog;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -68,10 +69,10 @@ namespace CliNet.Cores.Commands
                     socket.Close();
                 }
 
-                string message = string.Join("|", new List<byte>(buffer).Select(x => string.Format("{0}", x.ToString("X"))));
+                string message = string.Join("|", new List<byte>(buffer).Select(x => string.Format("{0}", x.ToString("X2"))));
                 if (string.IsNullOrEmpty(message) == false)
                 {
-                    LogManager.GetCurrentClassLogger().Info(message);
+                    LogManager.GetCurrentClassLogger().Info("[{0}]{1}", Key, message);
                 }
             };
 
