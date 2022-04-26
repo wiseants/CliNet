@@ -1,56 +1,51 @@
 ﻿using AustinHarris.JsonRpc;
 using Common.Network;
+using Common.Templates;
 using NLog;
 using System;
 using System.Linq;
 
 namespace CliNet.Cores.Managers
 {
-    public class RpcServiceManager : JsonRpcServer
+    public class RpcServiceManager : Singleton<RpcServiceManager>
     {
         #region Fields
 
-        private static RpcServiceManager _instance = null;
-        private static readonly object lockObject = new object();
+        private readonly JsonRpcServer _rpcServer = new JsonRpcServer();
 
         #endregion
 
-        #region Properties
+        #region Constructors
 
-        /// <summary>
-        /// 싱글톤 인스턴스.
-        /// </summary>
-        public static RpcServiceManager Instance
+        public RpcServiceManager()
         {
-            get
-            {
-                if (_instance == null)
-                {
-                    lock (lockObject)
-                    {
-                        _instance = new RpcServiceManager
-                        {
-                            Services = AppDomain.CurrentDomain.GetAssemblies()
-                                .SelectMany(s => s.GetTypes())
-                                .Where(p => typeof(JsonRpcService).IsAssignableFrom(p) && p.IsAbstract == false)
-                                .Select(type => (JsonRpcService)Activator.CreateInstance(type)).ToList()
-                        };
-
-                        LogManager.GetCurrentClassLogger().Info("Found {0} services.", Instance.Services.Count);
-                    }
-                }
-
-                return _instance;
-            }
+            _rpcServer.Services = AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(s => s.GetTypes())
+                .Where(p => typeof(JsonRpcService).IsAssignableFrom(p) && p.IsAbstract == false)
+                .Select(type => (JsonRpcService)Activator.CreateInstance(type)).ToList();
         }
 
         #endregion
 
         #region Public methods
 
+        public void Start(int port)
+        {
+            _rpcServer.Start(port);
+
+            LogManager.GetCurrentClassLogger().Info("Start {0} services.", _rpcServer.Services.Count);
+        }
+
+        public void Stop()
+        {
+            _rpcServer.Stop();
+
+            LogManager.GetCurrentClassLogger().Info("Stop services.");
+        }
+
         public void Release()
         {
-            Instance.Stop();
+            Stop();
         }
 
         #endregion
