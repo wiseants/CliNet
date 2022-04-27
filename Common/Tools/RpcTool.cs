@@ -31,7 +31,7 @@ namespace Common.Tools
         /// <param name="command">메소드 이름.</param>
         /// <param name="args">메소드 파라미터.</param>
         /// <returns>반환 값.</returns>
-        public static async Task<T> Command<T>(this IPEndPoint serviceEndpoint, string command, params object[] args)
+        public static async Task<T> AsyncCommand<T>(this IPEndPoint serviceEndpoint, string command, params object[] args)
         {
             return await Task.Run<T>(() =>
             {
@@ -81,9 +81,34 @@ namespace Common.Tools
         /// <param name="command">메소드 이름.</param>
         /// <param name="args">메소드 파라미터.</param>
         /// <returns>반환 값.</returns>
-        public static async Task<bool> Command(this IPEndPoint serviceEndpoint, string command, params object[] args)
+        public static async Task<bool> AsyncCommand(this IPEndPoint serviceEndpoint, string command, params object[] args)
         {
-            return await serviceEndpoint.Command<bool>(command, args);
+            return await serviceEndpoint.AsyncCommand<bool>(command, args);
+        }
+
+        /// <summary>
+        /// 로컬 RPC 메소드 실행.
+        /// </summary>
+        /// <typeparam name="T">반환 타입.</typeparam>
+        /// <param name="port">포트 번호.</param>
+        /// <param name="command">메소드 이름.</param>
+        /// <param name="args">메소드 파라미터.</param>
+        /// <returns>반환 값.</returns>
+        public static async Task<T> AsyncLocalCommand<T>(int port, string command, params object[] args)
+        {
+            return await new IPEndPoint(IPAddress.Parse("127.0.0.1"), port).AsyncCommand<T>(command, args);
+        }
+
+        /// <summary>
+        /// 로컬 RPC 결과를 반환하는 메소드 실행.
+        /// </summary>
+        /// <param name="port">포트 번호.</param>
+        /// <param name="command">메소드 이름.</param>
+        /// <param name="args">메소드 파라미터.</param>
+        /// <returns>반환 값.</returns>
+        public static async Task<bool> AsyncLocalCommand(int port, string command, params object[] args)
+        {
+            return await new IPEndPoint(IPAddress.Parse("127.0.0.1"), port).AsyncCommand<bool>(command, args);
         }
 
         #endregion

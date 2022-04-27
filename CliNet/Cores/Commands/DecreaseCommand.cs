@@ -27,7 +27,7 @@ namespace CliNetCore.Cores.Commands
 
         public int Action()
         {
-            new IPEndPoint(IPAddress.Parse("127.0.0.1"), Port).Command<int>("Decr", TargetNumber).ContinueWith(x =>
+            new IPEndPoint(IPAddress.Parse("127.0.0.1"), Port).AsyncCommand<int>("Decr", TargetNumber).ContinueWith(x =>
             {
                 Console.WriteLine(string.Format("{0}", x.Result));
             });
