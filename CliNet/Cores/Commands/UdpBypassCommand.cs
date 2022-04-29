@@ -68,12 +68,12 @@ namespace CliNet.Cores.Commands
                 return 0;
             }
 
-            UdpListener lister = new UdpListener()
+            UdpListener listner = new UdpListener()
             {
                 IpAddress = SenderIpAddress,
                 PortNo = SenderPortNo
             };
-            lister.Received += (sender, buffer) =>
+            listner.Received += (sender, buffer) =>
             {
                 using (Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp))
                 {
@@ -92,7 +92,7 @@ namespace CliNet.Cores.Commands
                 }
             };
 
-            ThreadManager.Instance.Add(Key, lister);
+            ThreadManager.Instance.Add(Key, listner);
 
             Console.WriteLine("Start a UDP-Bypass.");
 
