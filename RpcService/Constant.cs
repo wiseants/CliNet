@@ -12,7 +12,7 @@ namespace RpcService
         /// <summary>
         /// 제품 경로.
         /// </summary>
-        public static string APPLICATION_FOLDER_PATH => string.Format(@"{0}\RpsService\", Environment.GetFolderPath(Environment.SpecialFolder.UserProfile));
+        public static string APPLICATION_FOLDER_PATH => string.Format(@"{0}\RpsService\", Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles));
 
         /// <summary>
         /// 로그 파일 저장 경로.

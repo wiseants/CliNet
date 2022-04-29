@@ -31,18 +31,18 @@ namespace RpcService
         {
             this.serviceProcessInstaller1 = new System.ServiceProcess.ServiceProcessInstaller();
             this.serviceInstaller1 = new System.ServiceProcess.ServiceInstaller();
-            this.serviceProcessInstaller1.Account = System.ServiceProcess.ServiceAccount.LocalSystem;
             // 
             // serviceProcessInstaller1
             // 
+            this.serviceProcessInstaller1.Account = System.ServiceProcess.ServiceAccount.LocalSystem;
             this.serviceProcessInstaller1.Password = null;
             this.serviceProcessInstaller1.Username = null;
             // 
             // serviceInstaller1
             // 
-            this.serviceInstaller1.ServiceName = "RpcServerService";
             this.serviceInstaller1.Description = "Open RPC Server.";
             this.serviceInstaller1.DisplayName = "RpcServer";
+            this.serviceInstaller1.ServiceName = "RpcServerService";
             // 
             // ProjectInstaller
             // 

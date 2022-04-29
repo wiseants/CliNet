@@ -24,13 +24,7 @@ namespace Common.Network
 
         #region Properties
 
-        public bool IsRunning
-        {
-            get
-            {
-                return socketListener != null && socketListener.Server.IsBound == true;
-            }
-        }
+        public bool IsRunning => socketListener != null && socketListener.Server.IsBound == true;
 
         public ICollection<JsonRpcService> Services
         {
@@ -73,7 +67,7 @@ namespace Common.Network
                 JsonRpcProcessor.Process(async, writer);
             }, tokenSource.Token);
 
-            LogManager.GetCurrentClassLogger().Info("Service started.");
+            LogManager.GetCurrentClassLogger().Info("Service started. PortNo({0})", port);
         }
 
         public void Stop()

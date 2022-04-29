@@ -12,6 +12,9 @@ namespace RpcService
         /// </summary>
         static void Main()
         {
+            var a = Constant.LOG_FOLDER_PATH;
+            var b = string.Format(@"{0}${{shortdate}}.log", Constant.LOG_FOLDER_PATH);
+
             ServiceBase[] ServicesToRun;
             ServicesToRun = new ServiceBase[]
             {
