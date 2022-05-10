@@ -35,10 +35,21 @@ namespace CliNet.Cores.Commands
         {
             Channel channel = new Channel("127.0.0.1", Port, ChannelCredentials.Insecure);
 
-            HelloReply reply = new Greeter.GreeterClient(channel).SayHello(new HelloRequest { Name = Message });
-            if (reply != null && string.IsNullOrEmpty(reply.Message) == false)
+            try
             {
-                Console.WriteLine(reply.Message);
+                HelloReply reply = new Greeter.GreeterClient(channel).SayHello(new HelloRequest { Name = Message });
+                if (reply != null && string.IsNullOrEmpty(reply.Message) == false)
+                {
+                    Console.WriteLine(reply.Message);
+                }
+            }
+            catch (RpcException)
+            {
+                Console.WriteLine("Could not call.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Exception occurred. Message({0})", ex.Message);
             }
 
             return 0;
