@@ -40,7 +40,12 @@ namespace CliNet.Cores.Commands
                 var reply = new FriendGreeter.FriendGreeterClient(channel).GetInfo(new InfoRequest { Key = Key });
                 if (reply != null)
                 {
-                    Console.WriteLine("Lat: {0}, Lng: {1}, Alt: {2}, Head:{3}", reply.Latitude, reply.Longitude, reply.Altitude, reply.Heading);
+                    Console.WriteLine("Key: {4}, Lat: {0}, Lng: {1}, Alt: {2}, Head:{3}", 
+                        reply.Latitude,
+                        reply.Longitude,
+                        reply.Altitude, 
+                        reply.Heading,
+                        reply.Key);
                 }
             }
             catch (RpcException)
