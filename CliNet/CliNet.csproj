@@ -110,6 +110,7 @@
   <ItemGroup>
     <Compile Include="Constant.cs" />
     <Compile Include="Cores\Commands\DecreaseCommand.cs" />
+    <Compile Include="Cores\Commands\EchoServerCommand.cs" />
     <Compile Include="Cores\Commands\ExitCommand.cs" />
     <Compile Include="Cores\Commands\EchoClientCommand.cs" />
     <Compile Include="Cores\Commands\IncreaseCommand.cs" />
