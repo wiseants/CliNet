@@ -48,7 +48,7 @@ namespace CliNet.Cores.Commands
             {
                 ThreadManager.Instance.Remove(Key);
 
-                Console.WriteLine("Stop a UDP-Bypass.");
+                Console.WriteLine("Stop a GRPC-Server.");
 
                 return 0;
             }
