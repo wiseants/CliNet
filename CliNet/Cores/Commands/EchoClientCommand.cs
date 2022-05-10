@@ -9,6 +9,8 @@ namespace CliNet.Cores.Commands
     [Verb("echo", HelpText = "Echo by GRPC")]
     public class EchoClientCommand : IAction
     {
+        #region Properties
+
         public bool IsValid => true;
 
         [Option('p', "port", Required = false, HelpText = "Service port number.")]
@@ -25,17 +27,23 @@ namespace CliNet.Cores.Commands
             set;
         }
 
+        #endregion
+
+        #region Public methods
+
         public int Action()
         {
             Channel channel = new Channel("127.0.0.1", Port, ChannelCredentials.Insecure);
 
-            var client = new Greeter.GreeterClient(channel);
-
-            var reply = client.SayHello(new HelloRequest { Name = Message });
-
-            Console.WriteLine(reply.Message);
+            HelloReply reply = new Greeter.GreeterClient(channel).SayHello(new HelloRequest { Name = Message });
+            if (reply != null && string.IsNullOrEmpty(reply.Message) == false)
+            {
+                Console.WriteLine(reply.Message);
+            }
 
             return 0;
         }
+
+        #endregion
     }
 }
