@@ -1,15 +1,13 @@
 ﻿using CliNet.Interfaces;
 using CommandLine;
-using Common.Tools;
 using Grpc.Core;
 using Helloworld;
 using System;
-using System.Net;
 
-namespace CliNetCore.Cores.Commands
+namespace CliNet.Cores.Commands
 {
-    [Verb("increase", HelpText = "Increase number")]
-    public class IncreaseCommand : IAction
+    [Verb("echo", HelpText = "Echo by GRPC")]
+    public class EchoClientCommand : IAction
     {
         public bool IsValid => true;
 
@@ -18,10 +16,10 @@ namespace CliNetCore.Cores.Commands
         {
             get;
             set;
-        } = 8055;
+        } = 30051;
 
-        [Option('t', "target", Required = true, HelpText = "target number.")]
-        public int TargetNumber
+        [Option('m', "message", Required = true, HelpText = "Your message.")]
+        public string Message
         {
             get;
             set;
@@ -29,12 +27,11 @@ namespace CliNetCore.Cores.Commands
 
         public int Action()
         {
-            Channel channel = new Channel("127.0.0.1:30051", ChannelCredentials.Insecure);
+            Channel channel = new Channel("127.0.0.1", Port, ChannelCredentials.Insecure);
 
             var client = new Greeter.GreeterClient(channel);
-            string user = "you";
 
-            var reply = client.SayHello(new HelloRequest { Name = user });
+            var reply = client.SayHello(new HelloRequest { Name = Message });
 
             Console.WriteLine(reply.Message);
 
