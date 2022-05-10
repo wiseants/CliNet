@@ -61,7 +61,7 @@ namespace CliNet.Cores.Commands
 
             ThreadManager.Instance.Add(Key, server);
 
-            Console.WriteLine("Start a UDP-Bypass.");
+            Console.WriteLine("Start a GRPC-Server.");
 
             return 0;
         }
