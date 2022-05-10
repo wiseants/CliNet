@@ -1,23 +1,14 @@
-﻿using CliNet.Cores.Managers;
+﻿using CliNet.Cores.Implementations;
+using CliNet.Cores.Managers;
 using CliNet.Interfaces;
 using CommandLine;
 using Common.Extensions;
 using Grpc.Core;
 using Helloworld;
 using System;
-using System.Threading.Tasks;
 
 namespace CliNet.Cores.Commands
 {
-    public class GreeterImpl : Greeter.GreeterBase
-    {
-        // Server side handler of the SayHello RPC
-        public override Task<HelloReply> SayHello(HelloRequest request, ServerCallContext context)
-        {
-            return Task.FromResult(new HelloReply { Message = "Echo: " + request.Name });
-        }
-    }
-
     [Verb("echoserver", HelpText = "Run Echo-server.")]
     public class EchoServerCommand : IAction
     {
