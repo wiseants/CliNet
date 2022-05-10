@@ -1,10 +1,7 @@
 ﻿using CliNet.Interfaces;
 using CommandLine;
 using Common.Tools;
-using Grpc.Core;
-using Helloworld;
 using System;
-using System.Net;
 
 namespace CliNetCore.Cores.Commands
 {
@@ -29,14 +26,10 @@ namespace CliNetCore.Cores.Commands
 
         public int Action()
         {
-            Channel channel = new Channel("127.0.0.1:30051", ChannelCredentials.Insecure);
-
-            var client = new Greeter.GreeterClient(channel);
-            string user = "you";
-
-            var reply = client.SayHello(new HelloRequest { Name = user });
-
-            Console.WriteLine(reply.Message);
+            RpcTool.AsyncLocalCommand<int>(Port, "Incr", TargetNumber).ContinueWith(x =>
+            {
+                Console.WriteLine(string.Format("{0}", x.Result));
+            });
 
             return 0;
         }

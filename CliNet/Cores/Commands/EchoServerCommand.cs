@@ -3,8 +3,8 @@ using CliNet.Cores.Managers;
 using CliNet.Interfaces;
 using CommandLine;
 using Common.Extensions;
+using Friend;
 using Grpc.Core;
-using Helloworld;
 using System;
 
 namespace CliNet.Cores.Commands
@@ -55,7 +55,7 @@ namespace CliNet.Cores.Commands
 
             ThreadableServer server = new ThreadableServer
             {
-                Services = { Greeter.BindService(new GreeterImpl()) },
+                Services = { FriendGreeter.BindService(new FriendGreeterImpl()) },
                 Ports = { new ServerPort("127.0.0.1", Port, ServerCredentials.Insecure) }
             };
 

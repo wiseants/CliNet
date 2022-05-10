@@ -1,7 +1,7 @@
 ﻿using CliNet.Interfaces;
 using CommandLine;
+using Friend;
 using Grpc.Core;
-using Helloworld;
 using System;
 
 namespace CliNet.Cores.Commands
@@ -13,19 +13,19 @@ namespace CliNet.Cores.Commands
 
         public bool IsValid => true;
 
+        [Option('i', "identifier", Required = false, HelpText = "Request Identifier")]
+        public string Key
+        {
+            get;
+            set;
+        } = "default";
+
         [Option('p', "port", Required = false, HelpText = "Service port number.")]
         public int Port
         {
             get;
             set;
         } = 30051;
-
-        [Option('m', "message", Required = true, HelpText = "Your message.")]
-        public string Message
-        {
-            get;
-            set;
-        }
 
         #endregion
 
@@ -37,10 +37,10 @@ namespace CliNet.Cores.Commands
 
             try
             {
-                HelloReply reply = new Greeter.GreeterClient(channel).SayHello(new HelloRequest { Name = Message });
-                if (reply != null && string.IsNullOrEmpty(reply.Message) == false)
+                var reply = new FriendGreeter.FriendGreeterClient(channel).GetInfo(new InfoRequest { Key = Key });
+                if (reply != null)
                 {
-                    Console.WriteLine(reply.Message);
+                    Console.WriteLine("Lat: {0}, Lng: {1}, Alt: {2}, Head:{3}", reply.Latitude, reply.Longitude, reply.Altitude, reply.Heading);
                 }
             }
             catch (RpcException)
