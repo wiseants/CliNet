@@ -20,6 +20,13 @@ namespace CliNet.Cores.Commands
             set;
         } = "default";
 
+        [Option('a', "address", Required = false, HelpText = "Server IP address.")]
+        public string ServerIpAddress
+        {
+            get;
+            set;
+        } = "127.0.0.1";
+
         [Option('p', "port", Required = false, HelpText = "Service port number.")]
         public int Port
         {
@@ -33,7 +40,13 @@ namespace CliNet.Cores.Commands
 
         public int Action()
         {
-            Channel channel = new Channel("127.0.0.1", Port, ChannelCredentials.Insecure);
+            if (string.IsNullOrEmpty(ServerIpAddress))
+            {
+                Console.WriteLine("IP is empty.");
+                return 0;
+            }
+
+            Channel channel = new Channel(ServerIpAddress, Port, ChannelCredentials.Insecure);
 
             try
             {
