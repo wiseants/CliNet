@@ -16,6 +16,7 @@ namespace CliNet.Cores.Implementations
             return Task.FromResult(new InfoReply 
             { 
                 Key = request.Key,
+                Exist = true,
                 Latitude = 0.1,
                 Longitude = 0.2,
                 Altitude = 0.3,

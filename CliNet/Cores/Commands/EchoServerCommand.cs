@@ -30,6 +30,12 @@ namespace CliNet.Cores.Commands
             set;
         } = false;
 
+        [Option('a', "address", Required = false, HelpText = "Server IP address.")]
+        public string IpAddress
+        {
+            get;
+            set;
+        } = "127.0.0.1";
 
         [Option('p', "port", Required = false, HelpText = "Service port number.")]
         public int Port
@@ -53,10 +59,16 @@ namespace CliNet.Cores.Commands
                 return 0;
             }
 
+            if (string.IsNullOrEmpty(IpAddress))
+            {
+                Console.WriteLine("IP is empty.");
+                return 0;
+            }
+
             ThreadableServer server = new ThreadableServer
             {
                 Services = { FriendGreeter.BindService(new FriendGreeterImpl()) },
-                Ports = { new ServerPort("127.0.0.1", Port, ServerCredentials.Insecure) }
+                Ports = { new ServerPort(IpAddress, Port, ServerCredentials.Insecure) }
             };
 
             ThreadManager.Instance.Add(Key, server);

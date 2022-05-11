@@ -61,7 +61,7 @@ namespace CliNet.Cores.Commands
                         reply.Key);
                 }
             }
-            catch (RpcException)
+            catch (RpcException ex)
             {
                 Console.WriteLine("Could not call.");
             }
