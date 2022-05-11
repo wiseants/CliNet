@@ -3,6 +3,7 @@ using CliNet.Cores.Managers;
 using CliNet.Interfaces;
 using CommandLine;
 using Common.Extensions;
+using Common.Tools;
 using Friend;
 using Grpc.Core;
 using System;
@@ -35,7 +36,7 @@ namespace CliNet.Cores.Commands
         {
             get;
             set;
-        } = "127.0.0.1";
+        } = IPAddressTool.LocalIpAddress;
 
         [Option('p', "port", Required = false, HelpText = "Service port number.")]
         public int Port
