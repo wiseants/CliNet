@@ -26,10 +26,15 @@ namespace CliNetCore.Cores.Commands
 
         public int Action()
         {
-            RpcTool.AsyncLocalCommand<int>(Port, "Incr", TargetNumber).ContinueWith(x =>
-            {
-                Console.WriteLine(string.Format("{0}", x.Result));
-            });
+            // Incr RPC 메소드 호출.
+            int incrResult = RpcTool.LocalCommand<int>(Port, "Incr", TargetNumber);
+
+            Console.WriteLine(string.Format("{0}", incrResult));
+
+            // Decr RPC 메소드 호출.
+            int decrResult = RpcTool.LocalCommand<int>(Port, "Decr", TargetNumber);
+
+            Console.WriteLine(string.Format("{0}", decrResult));
 
             return 0;
         }

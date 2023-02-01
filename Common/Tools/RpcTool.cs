@@ -99,6 +99,11 @@ namespace Common.Tools
             return await new IPEndPoint(IPAddress.Parse("127.0.0.1"), port).AsyncCommand<T>(command, args);
         }
 
+        public static T LocalCommand<T>(int port, string command, params object[] args)
+        {
+            return new IPEndPoint(IPAddress.Parse("127.0.0.1"), port).AsyncCommand<T>(command, args).Result;
+        }
+
         /// <summary>
         /// 로컬 RPC 결과를 반환하는 메소드 실행.
         /// </summary>
