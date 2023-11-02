@@ -122,6 +122,7 @@
     <Compile Include="Cores\Managers\ThreadManager.cs" />
     <Compile Include="Cores\Services\ExampleService.cs" />
     <Compile Include="Interfaces\IAction.cs" />
+    <Compile Include="Models\AsyncObject.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
