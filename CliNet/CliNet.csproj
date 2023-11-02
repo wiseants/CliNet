@@ -114,6 +114,7 @@
     <Compile Include="Cores\Commands\ExitCommand.cs" />
     <Compile Include="Cores\Commands\EchoClientCommand.cs" />
     <Compile Include="Cores\Commands\IncreaseCommand.cs" />
+    <Compile Include="Cores\Commands\PrintServerCommand.cs" />
     <Compile Include="Cores\Commands\UdpBypassCommand.cs" />
     <Compile Include="Cores\Commands\RpcServiceCommand.cs" />
     <Compile Include="Cores\Implementations\GreeterImpl.cs" />
