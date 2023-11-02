@@ -4,6 +4,7 @@ using CliNet.Models;
 using CommandLine;
 using Common.Network;
 using Elasticsearch.Net;
+using MiscUtil;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,12 +33,19 @@ namespace CliNet.Cores.Commands
 
         public int Action()
         {
-            _sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            IPEndPoint serverEP = new IPEndPoint(IPAddress.Any, Port);
+            try
+            {
+                _sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                IPEndPoint serverEP = new IPEndPoint(IPAddress.Any, Port);
 
-            _sock.Bind(serverEP);
-            _sock.Listen(10);
-            _sock.BeginAccept(AcceptCallback, null);
+                _sock.Bind(serverEP);
+                _sock.Listen(10);
+                _sock.BeginAccept(AcceptCallback, null);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
 
             return 0;
         }
@@ -55,23 +63,27 @@ namespace CliNet.Cores.Commands
             }
             catch (Exception e)
             {
+                Console.WriteLine(e.Message);
             }
         }
 
         private void DataReceived(IAsyncResult ar)
         {
-            AsyncObject obj = (AsyncObject)ar.AsyncState;
+            if (ar.AsyncState is AsyncObject asyncObject)
+            {
+                int receivedLength = asyncObject.WorkingSocket.EndReceive(ar);
 
-            int received = obj.WorkingSocket.EndReceive(ar);
+                byte[] buffer = new byte[receivedLength];
 
-            byte[] buffer = new byte[received];
+                Array.Copy(asyncObject.Buffer, 0, buffer, 0, receivedLength);
 
-            Array.Copy(obj.Buffer, 0, buffer, 0, received);
+                string command = Encoding.Default.GetString(buffer, 0, receivedLength);
 
-            Console.WriteLine(Encoding.Default.GetString(buffer));
+                Console.WriteLine(command);
 
-            // R 전송.
-            obj.WorkingSocket.Send(Encoding.UTF8.GetBytes("R"), SocketFlags.None);
+                // R 전송.
+                asyncObject.WorkingSocket.Send(Encoding.UTF8.GetBytes("R"), SocketFlags.None);
+            }
         }
     }
 }
