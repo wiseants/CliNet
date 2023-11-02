@@ -109,6 +109,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constant.cs" />
+    <Compile Include="Cores\Commands\ChangeTrackCommand.cs" />
     <Compile Include="Cores\Commands\DecreaseCommand.cs" />
     <Compile Include="Cores\Commands\EchoServerCommand.cs" />
     <Compile Include="Cores\Commands\ExitCommand.cs" />
@@ -117,7 +118,7 @@
     <Compile Include="Cores\Commands\PrintServerCommand.cs" />
     <Compile Include="Cores\Commands\UdpBypassCommand.cs" />
     <Compile Include="Cores\Commands\RpcServiceCommand.cs" />
-    <Compile Include="Cores\Commands\UploadCommand.cs" />
+    <Compile Include="Cores\Commands\ChangeUpdateCommand.cs" />
     <Compile Include="Cores\Implementations\FriendGreeterImpl.cs" />
     <Compile Include="Cores\Managers\RpcServiceManager.cs" />
     <Compile Include="Cores\Managers\ThreadManager.cs" />

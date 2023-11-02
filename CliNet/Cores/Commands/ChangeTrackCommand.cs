@@ -8,8 +8,8 @@ using System.Text;
 
 namespace CliNet.Cores.Commands
 {
-    [Verb("start-update", HelpText = "펌웨어 업데이트 시작 명령.")]
-    internal class UploadCommand : IAction
+    [Verb("change.track", HelpText = "트래커 모드로 변경합니다.")]
+    internal class ChangeTrackCommand : IAction
     {
         public bool IsValid => true;
 
@@ -45,16 +45,16 @@ namespace CliNet.Cores.Commands
                     IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(ServerIpAddress), Port);
                     sock.Connect(endPoint);
 
-                    Console.WriteLine("업로드 시작 명령을 전송합니다.");
+                    Console.WriteLine("명령을 전송합니다.");
 
                     // S 전송.
-                    sock.Send(Encoding.UTF8.GetBytes("S"), SocketFlags.None);
+                    sock.Send(Encoding.UTF8.GetBytes("E"), SocketFlags.None);
 
                     byte[] receiverBuff = new byte[128];
                     int receivedLength = sock.Receive(receiverBuff);
 
                     string result = Encoding.Default.GetString(receiverBuff, 0, receivedLength);
-                    message = result.Equals("R") ? "성공" : $"실패: {result}";
+                    message = result.Equals("R") ? "트래커 모드로 변경을 성공했습니다." : $"실패: {result}";
 
                     // 소켓 닫기.
                     sock.Close();
