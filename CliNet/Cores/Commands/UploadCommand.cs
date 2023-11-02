@@ -35,14 +35,14 @@ namespace CliNet.Cores.Commands
         {
             get;
             set;
-        } = @"D:\fileList.bin";
+        } = @"D:\test_app_2.bin";
 
         [Option('b', "block", Required = false, HelpText = "업로드시 한번에 전송하는 블럭 사이즈.")]
         public int BlockSize
         {
             get;
             set;
-        } = 100;
+        } = 1024;
 
         public int Action()
         {
