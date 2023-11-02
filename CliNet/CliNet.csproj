@@ -117,6 +117,7 @@
     <Compile Include="Cores\Commands\PrintServerCommand.cs" />
     <Compile Include="Cores\Commands\UdpBypassCommand.cs" />
     <Compile Include="Cores\Commands\RpcServiceCommand.cs" />
+    <Compile Include="Cores\Commands\UploadCommand.cs" />
     <Compile Include="Cores\Implementations\FriendGreeterImpl.cs" />
     <Compile Include="Cores\Managers\RpcServiceManager.cs" />
     <Compile Include="Cores\Managers\ThreadManager.cs" />
