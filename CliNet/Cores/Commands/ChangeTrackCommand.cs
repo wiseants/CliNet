@@ -38,15 +38,17 @@ namespace CliNet.Cores.Commands
                     IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(ServerIpAddress), Port);
                     sock.Connect(endPoint);
 
-                    Console.WriteLine("명령을 전송합니다.");
+                    Console.WriteLine("트래커 모드 변경 명령을 전송합니다.");
 
                     // E 전송.
                     sock.Send(Encoding.UTF8.GetBytes("E"), SocketFlags.None);
+                    Console.WriteLine(">> E");
 
                     byte[] receiverBuff = new byte[128];
                     int receivedLength = sock.Receive(receiverBuff);
 
                     string result = Encoding.Default.GetString(receiverBuff, 0, receivedLength);
+                    Console.WriteLine($"<< {result}");
                     message = result.Equals("R") ? "트래커 모드로 변경을 성공했습니다." : $"실패: {result}";
 
                     // 소켓 닫기.

@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.ServiceModel.Channels;
 using System.Text;
 
 namespace CliNet.Cores.Commands
@@ -46,8 +47,6 @@ namespace CliNet.Cores.Commands
 
         public int Action()
         {
-            string message;
-
             try
             {
                 using (Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp))
@@ -59,6 +58,7 @@ namespace CliNet.Cores.Commands
 
                     // U 전송.
                     sock.Send(Encoding.UTF8.GetBytes("U"), SocketFlags.None);
+                    Console.WriteLine(">> U");
 
                     string result;
                     byte[] receiverBuff = new byte[128];
@@ -66,36 +66,48 @@ namespace CliNet.Cores.Commands
                     int receivedLength = sock.Receive(receiverBuff);
 
                     result = Encoding.Default.GetString(receiverBuff, 0, receivedLength);
-                    message = result.Equals("R") ? "업로드를 시작합니다." : $"실패: {result}";
+                    Console.WriteLine($"<< {result}");
 
-                    byte[] fileBuffer = File.ReadAllBytes(FileFullPath);
-                    var a = fileBuffer.Take(100).ToArray();
-
-                    List<byte[]> bufferCollection = new List<byte[]>();
-
-                    int remainLength = fileBuffer.Length;
-                    while(remainLength > 0)
+                    if (result.Equals("R"))
                     {
-                        int length = remainLength < BlockSize ? remainLength : BlockSize;
-                        bufferCollection.Add(fileBuffer.Take(length).ToArray());
+                        Console.WriteLine("업로드를 시작합니다.");
 
-                        remainLength -= length;
+                        byte[] fileBuffer = File.ReadAllBytes(FileFullPath);
+                        var a = fileBuffer.Take(100).ToArray();
+
+                        List<byte[]> bufferCollection = new List<byte[]>();
+
+                        int remainLength = fileBuffer.Length;
+                        while (remainLength > 0)
+                        {
+                            int length = remainLength < BlockSize ? remainLength : BlockSize;
+                            bufferCollection.Add(fileBuffer.Take(length).ToArray());
+
+                            remainLength -= length;
+                        }
+
+                        foreach (byte[] buffer in bufferCollection)
+                        {
+                            // 데이터 전송.
+                            sock.Send(buffer, SocketFlags.None);
+                            Console.WriteLine($"데이터 송신: {buffer.Length}바이트");
+
+                            // R 받음.
+                            receivedLength = sock.Receive(receiverBuff);
+                            result = Encoding.Default.GetString(receiverBuff, 0, receivedLength);
+                            Console.WriteLine($"<< {result}");
+                        }
+
+                        // F 전송.
+                        sock.Send(Encoding.UTF8.GetBytes("F"), SocketFlags.None);
+                        Console.WriteLine(">> F");
+
+                        Console.WriteLine("업로드를 종료합니다.");
                     }
-
-                    foreach (byte[] buffer in bufferCollection)
+                    else
                     {
-                        // 데이터 전송.
-                        sock.Send(buffer, SocketFlags.None);
-
-                        // R 받음.
-                        receivedLength = sock.Receive(receiverBuff);
-                        result = Encoding.Default.GetString(receiverBuff, 0, receivedLength);
-
-                        Console.WriteLine(result.Equals("R") ? $"{buffer.Length}바이트 전송 성공." : $"실패: {result}");
+                        Console.WriteLine($"실패: {result}");
                     }
-
-                    // F 전송.
-                    sock.Send(Encoding.UTF8.GetBytes("F"), SocketFlags.None);
 
                     // 소켓 닫기.
                     sock.Close();
@@ -103,10 +115,8 @@ namespace CliNet.Cores.Commands
             }
             catch (Exception ex) 
             {
-                message = $"예외 발생: {ex.Message}";
+                Console.WriteLine($"예외 발생: {ex.Message}");
             }
-
-            Console.WriteLine(message);
 
             return 0;
         }
