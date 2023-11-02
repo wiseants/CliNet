@@ -3,8 +3,9 @@ using CliNet.Cores.Managers;
 using CliNet.Interfaces;
 using CommandLine;
 using Common.Extensions;
+using Common.Tools;
+using Friend;
 using Grpc.Core;
-using Helloworld;
 using System;
 
 namespace CliNet.Cores.Commands
@@ -30,6 +31,12 @@ namespace CliNet.Cores.Commands
             set;
         } = false;
 
+        [Option('a', "address", Required = false, HelpText = "Server IP address.")]
+        public string IpAddress
+        {
+            get;
+            set;
+        } = IPAddressTool.LocalIpAddress;
 
         [Option('p', "port", Required = false, HelpText = "Service port number.")]
         public int Port
@@ -53,10 +60,16 @@ namespace CliNet.Cores.Commands
                 return 0;
             }
 
+            if (string.IsNullOrEmpty(IpAddress))
+            {
+                Console.WriteLine("IP is empty.");
+                return 0;
+            }
+
             ThreadableServer server = new ThreadableServer
             {
-                Services = { Greeter.BindService(new GreeterImpl()) },
-                Ports = { new ServerPort("127.0.0.1", Port, ServerCredentials.Insecure) }
+                Services = { FriendGreeter.BindService(new FriendGreeterImpl()) },
+                Ports = { new ServerPort(IpAddress, Port, ServerCredentials.Insecure) }
             };
 
             ThreadManager.Instance.Add(Key, server);

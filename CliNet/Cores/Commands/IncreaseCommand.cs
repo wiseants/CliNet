@@ -1,10 +1,7 @@
 ﻿using CliNet.Interfaces;
 using CommandLine;
 using Common.Tools;
-using Grpc.Core;
-using Helloworld;
 using System;
-using System.Net;
 
 namespace CliNetCore.Cores.Commands
 {
@@ -29,14 +26,15 @@ namespace CliNetCore.Cores.Commands
 
         public int Action()
         {
-            Channel channel = new Channel("127.0.0.1:30051", ChannelCredentials.Insecure);
+            // Incr RPC 메소드 호출.
+            int incrResult = RpcTool.LocalCommand<int>(Port, "Incr", TargetNumber);
 
-            var client = new Greeter.GreeterClient(channel);
-            string user = "you";
+            Console.WriteLine(string.Format("{0}", incrResult));
 
-            var reply = client.SayHello(new HelloRequest { Name = user });
+            // Decr RPC 메소드 호출.
+            int decrResult = RpcTool.LocalCommand<int>(Port, "Decr", TargetNumber);
 
-            Console.WriteLine(reply.Message);
+            Console.WriteLine(string.Format("{0}", decrResult));
 
             return 0;
         }

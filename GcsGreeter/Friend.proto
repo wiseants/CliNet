@@ -14,20 +14,27 @@
 
 syntax = "proto3";
 
-package helloworld;
+package friend;
 
 // The greeting service definition.
-service Greeter {
-  // Sends a greeting
-  rpc SayHello (HelloRequest) returns (HelloReply) {}
+service FriendGreeter 
+{
+	rpc GetInfo (InfoRequest) returns (InfoReply) {}
 }
 
 // The request message containing the user's name.
-message HelloRequest {
-	string name = 1;
+message InfoRequest 
+{
+	string key = 1;
 }
 
 // The response message containing the greetings
-message HelloReply {
-  string message = 1;
+message InfoReply 
+{
+	string key = 1;
+	bool exist = 2;
+	double latitude = 3;
+	double longitude = 4;
+	double altitude = 5;
+	double heading = 6;
 }

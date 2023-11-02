@@ -1,7 +1,8 @@
 ﻿using CliNet.Interfaces;
 using CommandLine;
+using Common.Tools;
+using Friend;
 using Grpc.Core;
-using Helloworld;
 using System;
 
 namespace CliNet.Cores.Commands
@@ -13,6 +14,20 @@ namespace CliNet.Cores.Commands
 
         public bool IsValid => true;
 
+        [Option('i', "identifier", Required = false, HelpText = "Request Identifier")]
+        public string Key
+        {
+            get;
+            set;
+        } = "default";
+
+        [Option('a', "address", Required = false, HelpText = "Server IP address.")]
+        public string ServerIpAddress
+        {
+            get;
+            set;
+        } = IPAddressTool.LocalIpAddress;
+
         [Option('p', "port", Required = false, HelpText = "Service port number.")]
         public int Port
         {
@@ -20,30 +35,34 @@ namespace CliNet.Cores.Commands
             set;
         } = 30051;
 
-        [Option('m', "message", Required = true, HelpText = "Your message.")]
-        public string Message
-        {
-            get;
-            set;
-        }
-
         #endregion
 
         #region Public methods
 
         public int Action()
         {
-            Channel channel = new Channel("127.0.0.1", Port, ChannelCredentials.Insecure);
+            if (string.IsNullOrEmpty(ServerIpAddress))
+            {
+                Console.WriteLine("IP is empty.");
+                return 0;
+            }
+
+            Channel channel = new Channel(ServerIpAddress, Port, ChannelCredentials.Insecure);
 
             try
             {
-                HelloReply reply = new Greeter.GreeterClient(channel).SayHello(new HelloRequest { Name = Message });
-                if (reply != null && string.IsNullOrEmpty(reply.Message) == false)
+                var reply = new FriendGreeter.FriendGreeterClient(channel).GetInfo(new InfoRequest { Key = Key });
+                if (reply != null)
                 {
-                    Console.WriteLine(reply.Message);
+                    Console.WriteLine("Key: {4}, Lat: {0}, Lng: {1}, Alt: {2}, Head:{3}", 
+                        reply.Latitude,
+                        reply.Longitude,
+                        reply.Altitude, 
+                        reply.Heading,
+                        reply.Key);
                 }
             }
-            catch (RpcException)
+            catch (RpcException ex)
             {
                 Console.WriteLine("Could not call.");
             }
