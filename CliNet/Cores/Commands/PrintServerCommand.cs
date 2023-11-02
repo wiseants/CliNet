@@ -115,7 +115,7 @@ namespace CliNet.Cores.Commands
 
         private void OnChangeDownload(IAsyncResult ar)
         {
-            Console.WriteLine($"데이터 전송 시작.");
+            Console.WriteLine($"다운로드를 시작합니다.");
 
             if (ar.AsyncState is AsyncObject asyncObject)
             {
@@ -133,14 +133,14 @@ namespace CliNet.Cores.Commands
                     }
                     else
                     {
-                        Console.WriteLine($"데이터 받음: {receivedLength}바이트");
+                        Console.WriteLine($"데이터 수신: {receivedLength}바이트");
 
                         asyncObject.WorkingSocket.Send(Encoding.UTF8.GetBytes("R"), SocketFlags.None);
                     }
                 }
             }
 
-            Console.WriteLine($"데이터 전송 종료.");
+            Console.WriteLine($"다운로드를 종료합니다.");
         }
     }
 }
