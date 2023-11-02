@@ -27,13 +27,6 @@ namespace CliNet.Cores.Commands
             set;
         } = 30251;
 
-        [Option('f', "file", Required = false, HelpText = "업로드 할 파일 전체 경로.")]
-        public string FileFullPath
-        {
-            get;
-            set;
-        }
-
         public int Action()
         {
             string message;

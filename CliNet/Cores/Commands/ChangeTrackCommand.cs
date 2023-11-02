@@ -27,13 +27,6 @@ namespace CliNet.Cores.Commands
             set;
         } = 30251;
 
-        [Option('f', "file", Required = false, HelpText = "업로드 할 파일 전체 경로.")]
-        public string FileFullPath
-        {
-            get;
-            set;
-        }
-
         public int Action()
         {
             string message;
@@ -47,7 +40,7 @@ namespace CliNet.Cores.Commands
 
                     Console.WriteLine("명령을 전송합니다.");
 
-                    // S 전송.
+                    // E 전송.
                     sock.Send(Encoding.UTF8.GetBytes("E"), SocketFlags.None);
 
                     byte[] receiverBuff = new byte[128];
