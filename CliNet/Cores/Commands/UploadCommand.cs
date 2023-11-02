@@ -1,7 +1,6 @@
 ﻿using CliNet.Interfaces;
 using CommandLine;
 using Common.Tools;
-using MiscUtil;
 using System;
 using System.Net;
 using System.Net.Sockets;
@@ -9,7 +8,7 @@ using System.Text;
 
 namespace CliNet.Cores.Commands
 {
-    [Verb("upload", HelpText = "파일 업로드 시작.")]
+    [Verb("start-update", HelpText = "펌웨어 업데이트 시작 명령.")]
     internal class UploadCommand : IAction
     {
         public bool IsValid => true;
@@ -37,24 +36,36 @@ namespace CliNet.Cores.Commands
 
         public int Action()
         {
-            using (Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp))
+            string message;
+
+            try
             {
-                IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(ServerIpAddress), Port);
-                sock.Connect(endPoint);
+                using (Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp))
+                {
+                    IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(ServerIpAddress), Port);
+                    sock.Connect(endPoint);
 
-                Console.WriteLine("업로드를 시작합니다.");
+                    Console.WriteLine("업로드 시작 명령을 전송합니다.");
 
-                // S 전송.
-                sock.Send(Encoding.UTF8.GetBytes("S"), SocketFlags.None);
+                    // S 전송.
+                    sock.Send(Encoding.UTF8.GetBytes("S"), SocketFlags.None);
 
-                byte[] receiverBuff = new byte[8192];
-                int receivedLength = sock.Receive(receiverBuff);
+                    byte[] receiverBuff = new byte[128];
+                    int receivedLength = sock.Receive(receiverBuff);
 
-                Console.WriteLine(Encoding.Default.GetString(receiverBuff));
+                    string result = Encoding.Default.GetString(receiverBuff, 0, receivedLength);
+                    message = result.Equals("R") ? "성공" : $"실패: {result}";
 
-                // (5) 소켓 닫기
-                sock.Close();
+                    // 소켓 닫기.
+                    sock.Close();
+                }
             }
+            catch (Exception ex) 
+            {
+                message = $"예외 발생: {ex.Message}";
+            }
+
+            Console.WriteLine(message);
 
             return 0;
         }
