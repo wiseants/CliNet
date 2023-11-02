@@ -21,6 +21,14 @@ namespace CliNet.Cores.Commands
     internal class PrintServerCommand : IAction
     {
         private Socket _sock;
+        private Dictionary<string, Action<IAsyncResult>> _commandMap = new Dictionary<string, Action<IAsyncResult>>();
+
+        public PrintServerCommand() 
+        {
+            _commandMap.Add("S", OnChangeUpdateMode);
+            _commandMap.Add("E", OnChangeTrackMode);
+            _commandMap.Add("U", OnChangeDownload);
+        }
 
         public bool IsValid => true;
 
@@ -30,6 +38,18 @@ namespace CliNet.Cores.Commands
             get;
             set;
         } = 30251;
+
+        private static string _mode = "트래커";
+        private static string Mode
+        {
+            get => _mode;
+            set
+            {
+                _mode = value;
+
+                Console.WriteLine($"모드 변경: {_mode}");
+            }
+        }
 
         public int Action()
         {
@@ -55,8 +75,10 @@ namespace CliNet.Cores.Commands
             try
             {
                 Socket client = _sock.EndAccept(ar);
-                AsyncObject obj = new AsyncObject(1920 * 1080 * 3);
-                obj.WorkingSocket = client;
+                AsyncObject obj = new AsyncObject(1920 * 1080 * 3)
+                {
+                    WorkingSocket = client
+                };
                 client.BeginReceive(obj.Buffer, 0, 1920 * 1080 * 3, 0, DataReceived, obj);
 
                 _sock.BeginAccept(AcceptCallback, null);
@@ -81,8 +103,73 @@ namespace CliNet.Cores.Commands
 
                 Console.WriteLine(command);
 
+                if (_commandMap.TryGetValue(command, out Action<IAsyncResult> action))
+                {
+                    action(ar);
+                }
+                else
+                {
+                    Console.WriteLine($"잘못된 명령: {command}");
+                }
+
                 // R 전송.
                 asyncObject.WorkingSocket.Send(Encoding.UTF8.GetBytes("R"), SocketFlags.None);
+            }
+        }
+
+        private void OnChangeUpdateMode(IAsyncResult ar)
+        {
+            Mode = "업데이트";
+        }
+
+        private void OnChangeTrackMode(IAsyncResult ar)
+        {
+            Mode = "트래커";
+        }
+
+        private void OnChangeDownload(IAsyncResult ar)
+        {
+            Mode = "전송";
+
+            if (ar.AsyncState is AsyncObject asyncObject)
+            {
+                AsyncObject obj = new AsyncObject(1920 * 1080 * 3)
+                {
+                    WorkingSocket = asyncObject.WorkingSocket
+                };
+
+                asyncObject.WorkingSocket.BeginReceive(obj.Buffer, 0, 1920 * 1080 * 3, 0, UploadReceived, asyncObject);
+            }
+        }
+
+        private void UploadReceived(IAsyncResult ar)
+        {
+            if (ar.AsyncState is AsyncObject asyncObject)
+            {
+                int receivedLength = asyncObject.WorkingSocket.EndReceive(ar);
+
+                byte[] buffer = new byte[receivedLength];
+
+                Array.Copy(asyncObject.Buffer, 0, buffer, 0, receivedLength);
+
+                string command = Encoding.Default.GetString(buffer, 0, receivedLength);
+                if (command.Equals("U"))
+                {
+                    Console.WriteLine($"데이터 전송 종료.");
+                }
+                else
+                {
+                    Console.WriteLine($"데이터 받음: {receivedLength}바이트");
+
+                    // R 전송.
+                    asyncObject.WorkingSocket.Send(Encoding.UTF8.GetBytes("R"), SocketFlags.None);
+
+                    AsyncObject obj = new AsyncObject(1920 * 1080 * 3)
+                    {
+                        WorkingSocket = asyncObject.WorkingSocket
+                    };
+                    asyncObject.WorkingSocket.BeginReceive(obj.Buffer, 0, 1920 * 1080 * 3, 0, UploadReceived, asyncObject);
+                }
             }
         }
     }
