@@ -69,6 +69,9 @@ namespace CliNet.Cores.Commands
             Array.Copy(obj.Buffer, 0, buffer, 0, received);
 
             Console.WriteLine(Encoding.Default.GetString(buffer));
+
+            // R 전송.
+            obj.WorkingSocket.Send(Encoding.UTF8.GetBytes("R"), SocketFlags.None);
         }
     }
 }
