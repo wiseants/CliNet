@@ -1,14 +1,8 @@
-﻿using CliNet.Interfaces;
+﻿using CliNet.Cores.Implementations;
+using CliNet.Cores.Managers;
+using CliNet.Interfaces;
 using CommandLine;
 using Common.Tools;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.Sockets;
-using System.ServiceModel.Channels;
-using System.Text;
 
 namespace CliNet.Cores.Commands
 {
@@ -47,76 +41,15 @@ namespace CliNet.Cores.Commands
 
         public int Action()
         {
-            try
+            PrintServer server = new PrintServer
             {
-                using (Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp))
-                {
-                    IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(ServerIpAddress), Port);
-                    sock.Connect(endPoint);
+                ServerIpAddress = ServerIpAddress,
+                Port = Port,
+                FileFullPath = FileFullPath,
+                BlockSize = BlockSize
+            };
 
-                    Console.WriteLine("업로드 가능 여부를 확인합니다.");
-
-                    // U 전송.
-                    sock.Send(Encoding.UTF8.GetBytes("U"), SocketFlags.None);
-                    Console.WriteLine(">> U");
-
-                    string result;
-                    byte[] receiverBuff = new byte[128];
-                    // R 받음.
-                    int receivedLength = sock.Receive(receiverBuff);
-
-                    result = Encoding.Default.GetString(receiverBuff, 0, receivedLength);
-                    Console.WriteLine($"<< {result}");
-
-                    if (result.Equals("R"))
-                    {
-                        Console.WriteLine("업로드를 시작합니다.");
-
-                        byte[] fileBuffer = File.ReadAllBytes(FileFullPath);
-                        var a = fileBuffer.Take(100).ToArray();
-
-                        List<byte[]> bufferCollection = new List<byte[]>();
-
-                        int remainLength = fileBuffer.Length;
-                        while (remainLength > 0)
-                        {
-                            int length = remainLength < BlockSize ? remainLength : BlockSize;
-                            bufferCollection.Add(fileBuffer.Take(length).ToArray());
-
-                            remainLength -= length;
-                        }
-
-                        foreach (byte[] buffer in bufferCollection)
-                        {
-                            // 데이터 전송.
-                            sock.Send(buffer, SocketFlags.None);
-                            Console.WriteLine($"데이터 송신: {buffer.Length}바이트");
-
-                            // R 받음.
-                            receivedLength = sock.Receive(receiverBuff);
-                            result = Encoding.Default.GetString(receiverBuff, 0, receivedLength);
-                            Console.WriteLine($"<< {result}");
-                        }
-
-                        // F 전송.
-                        sock.Send(Encoding.UTF8.GetBytes("F"), SocketFlags.None);
-                        Console.WriteLine(">> F");
-
-                        Console.WriteLine("업로드를 종료합니다.");
-                    }
-                    else
-                    {
-                        Console.WriteLine($"실패: {result}");
-                    }
-
-                    // 소켓 닫기.
-                    sock.Close();
-                }
-            }
-            catch (Exception ex) 
-            {
-                Console.WriteLine($"예외 발생: {ex.Message}");
-            }
+            ThreadManager.Instance.Add("upload", server);
 
             return 0;
         }
