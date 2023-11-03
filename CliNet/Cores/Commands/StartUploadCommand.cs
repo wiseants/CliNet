@@ -6,8 +6,8 @@ using Common.Tools;
 
 namespace CliNet.Cores.Commands
 {
-    [Verb("upload", HelpText = "업로드를 진행합니다.")]
-    internal class UploadCommand : IAction
+    [Verb("start.upload", HelpText = "업로드를 시작합니다.")]
+    internal class StartUploadCommand : IAction
     {
         public bool IsValid => true;
 

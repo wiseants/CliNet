@@ -15,6 +15,8 @@ namespace CliNet.Cores.Implementations
 {
     public class PrintServer : IThreadable
     {
+        public event Action<int> Finished;
+
         private readonly Thread _thread;
 
         public PrintServer() 
@@ -128,6 +130,8 @@ namespace CliNet.Cores.Implementations
             {
                 Console.WriteLine($"예외 발생: {ex.Message}");
             }
+
+            Finished?.Invoke(0);
         }
     }
 }

@@ -109,7 +109,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constant.cs" />
-    <Compile Include="Cores\Commands\UploadCommand.cs" />
+    <Compile Include="Cores\Commands\StopUploadCommand.cs" />
+    <Compile Include="Cores\Commands\StartUploadCommand.cs" />
     <Compile Include="Cores\Commands\ChangeTrackCommand.cs" />
     <Compile Include="Cores\Commands\DecreaseCommand.cs" />
     <Compile Include="Cores\Commands\EchoServerCommand.cs" />

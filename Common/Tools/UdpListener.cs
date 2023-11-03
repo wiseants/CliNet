@@ -20,7 +20,8 @@ namespace Common.Tools
         /// <summary>
         /// 데이터 받기 이벤트.
         /// </summary>
-        public ReceivedHandler Received;
+        public event ReceivedHandler Received;
+        public event Action<int> Finished;
 
         #endregion
 
@@ -142,6 +143,8 @@ namespace Common.Tools
                     LogManager.GetCurrentClassLogger().Error("Exception occurred. Message({0})", ex.Message);
                 }
             }
+
+            Finished.Invoke(0);
         }
 
         private void ReceivedLoop(UdpClient udp, CancellationToken cancellationToken)
