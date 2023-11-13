@@ -8,7 +8,7 @@ using System.Text;
 
 namespace CliNet.Cores.Commands
 {
-    [Verb("print", HelpText = "입력되는 문자열을 출력하는 서버 시작.")]
+    [Verb("print", HelpText = "트래커 테스트를 위한 프린트 서버 시작.")]
     internal class PrintServerCommand : Interfaces.IAction
     {
         private Socket _sock;
