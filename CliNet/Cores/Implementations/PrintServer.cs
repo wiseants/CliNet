@@ -86,17 +86,17 @@ namespace CliNet.Cores.Implementations
                         Console.WriteLine("업로드를 시작합니다.");
 
                         byte[] fileBuffer = File.ReadAllBytes(FileFullPath);
-                        var a = fileBuffer.Take(100).ToArray();
 
                         List<byte[]> bufferCollection = new List<byte[]>();
 
-                        int remainLength = fileBuffer.Length;
-                        while (remainLength > 0)
+                        int index = 0;
+                        while (index < fileBuffer.Length)
                         {
-                            int length = remainLength < BlockSize ? remainLength : BlockSize;
-                            bufferCollection.Add(fileBuffer.Take(length).ToArray());
+                            int length = (fileBuffer.Length - index) < BlockSize ? (fileBuffer.Length - index) : BlockSize;
 
-                            remainLength -= length;
+                            bufferCollection.Add(fileBuffer.Skip(index).Take(length).ToArray());
+
+                            index += length;
                         }
 
                         foreach (byte[] buffer in bufferCollection)
