@@ -109,6 +109,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constant.cs" />
+    <Compile Include="Cores\Commands\StopUploadCommand.cs" />
+    <Compile Include="Cores\Commands\StartUploadCommand.cs" />
+    <Compile Include="Cores\Commands\ChangeTrackCommand.cs" />
     <Compile Include="Cores\Commands\DecreaseCommand.cs" />
     <Compile Include="Cores\Commands\EchoServerCommand.cs" />
     <Compile Include="Cores\Commands\ExitCommand.cs" />
@@ -117,11 +120,14 @@
     <Compile Include="Cores\Commands\PrintServerCommand.cs" />
     <Compile Include="Cores\Commands\UdpBypassCommand.cs" />
     <Compile Include="Cores\Commands\RpcServiceCommand.cs" />
+    <Compile Include="Cores\Commands\ChangeUpdateCommand.cs" />
     <Compile Include="Cores\Implementations\FriendGreeterImpl.cs" />
+    <Compile Include="Cores\Implementations\PrintServer.cs" />
     <Compile Include="Cores\Managers\RpcServiceManager.cs" />
     <Compile Include="Cores\Managers\ThreadManager.cs" />
     <Compile Include="Cores\Services\ExampleService.cs" />
     <Compile Include="Interfaces\IAction.cs" />
+    <Compile Include="Models\AsyncObject.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

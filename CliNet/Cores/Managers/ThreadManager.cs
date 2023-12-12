@@ -1,7 +1,6 @@
 ﻿using Common.Interfaces;
 using Common.Templates;
 using NLog;
-using System;
 using System.Collections.Concurrent;
 using System.Linq;
 
@@ -23,14 +22,18 @@ namespace CliNet.Cores.Managers
             {
                 beforeThread.Stop();
 
-                Console.WriteLine("Remove a thread.");
-                LogManager.GetCurrentClassLogger().Info("Remove a thread.");
+                LogManager.GetCurrentClassLogger().Info($"{key} 스레드를 제거합니다.");
             }
 
+            thread.Finished += r =>
+            {
+                Remove(key);
+            };
             thread.Start();
+
             if (_threadMap.TryAdd(key, thread))
             {
-                LogManager.GetCurrentClassLogger().Info("Add a thread.");
+                LogManager.GetCurrentClassLogger().Info($"{key} 스레드를 추가합니다.");
             }
         }
 
@@ -42,8 +45,7 @@ namespace CliNet.Cores.Managers
                 {
                     beforeThread.Stop();
 
-                    Console.WriteLine("Remove a thread.");
-                    LogManager.GetCurrentClassLogger().Info("Remove a thread.");
+                    LogManager.GetCurrentClassLogger().Info($"{key} 스레드를 제거합니다.");
                 }
             }
         }
