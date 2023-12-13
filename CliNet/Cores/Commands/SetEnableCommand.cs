@@ -44,6 +44,13 @@ namespace CliNet.Cores.Commands
             set;
         }
 
+        [Option('t', "timeout", Required = false, HelpText = "타임아웃 시간(ms)")]
+        public int Timeout
+        {
+            get;
+            set;
+        } = 2000;
+
         #endregion
 
         #region Public methods
@@ -56,6 +63,8 @@ namespace CliNet.Cores.Commands
                 {
                     IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(ServerIpAddress), Port);
                     sock.Connect(endPoint);
+                    sock.SendTimeout = Timeout;
+                    sock.ReceiveTimeout = Timeout;
 
                     SetEnableRequestInfo requestInfo = new SetEnableRequestInfo()
                     {
