@@ -28,7 +28,7 @@ namespace CliNet.Models.Commands
         {
             get;
             set;
-        }
+        } = 0;
 
         #endregion
     }

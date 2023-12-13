@@ -25,8 +25,8 @@ namespace CliNet.Cores.Implementations
         private readonly Dictionary<string, Func<PacketInfo, object>> RESPONSE_BUILDER_MAP = new Dictionary<string, Func<PacketInfo, object>>()
         {
             { "SetEnable", BuildSetEnableResponse },
-            { "GetConfig", BuildSetEnableResponse },
-            { "SetConfig", BuildSetEnableResponse },
+            { "GetConfig", BuildGetConfigResponse },
+            { "SetConfig", BuildSetConfigResponse },
         };
 
         private readonly Thread _thread;

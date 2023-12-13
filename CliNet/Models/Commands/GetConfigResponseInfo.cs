@@ -28,7 +28,7 @@ namespace CliNet.Models.Commands
         {
             get;
             set;
-        }
+        } = false;
 
         /// <summary>
         /// 영상 스트림 받기 타입
@@ -38,7 +38,7 @@ namespace CliNet.Models.Commands
         {
             get;
             set;
-        }
+        } = 0;
 
         /// <summary>
         /// 영상 스트림 받기 포트 번호.
@@ -47,7 +47,7 @@ namespace CliNet.Models.Commands
         {
             get;
             set;
-        }
+        } = 0;
 
         /// <summary>
         /// 가공된 영상 스트림 보내기 타입
@@ -57,7 +57,7 @@ namespace CliNet.Models.Commands
         {
             get;
             set;
-        }
+        } = 0;
 
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace CliNet.Models.Commands
         {
             get;
             set;
-        }
+        } = "127.0.0.1";
 
         /// <summary>
         /// 가공된 영상 스트림 보내기 포트 번호.
@@ -76,7 +76,7 @@ namespace CliNet.Models.Commands
         {
             get;
             set;
-        }
+        } = 0;
 
         /// <summary>
         /// 반환 코드.
@@ -86,7 +86,7 @@ namespace CliNet.Models.Commands
         {
             get;
             set;
-        }
+        } = 0;
 
         #endregion
     }
