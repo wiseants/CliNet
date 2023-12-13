@@ -111,13 +111,14 @@
     <Compile Include="Constant.cs" />
     <Compile Include="Cores\Commands\StopPrintServerCommand.cs" />
     <Compile Include="Cores\Commands\StartPrintServerCommand.cs" />
-    <Compile Include="Cores\Commands\ChangeTrackCommand.cs" />
+    <Compile Include="Cores\Commands\SetEnableCommand.cs" />
     <Compile Include="Cores\Commands\ExitCommand.cs" />
     <Compile Include="Cores\Commands\ChangeUpdateCommand.cs" />
     <Compile Include="Cores\Implementations\FriendGreeterImpl.cs" />
     <Compile Include="Cores\Implementations\AiModuleServer.cs" />
     <Compile Include="Cores\Implementations\PrintServer.cs" />
     <Compile Include="Cores\Managers\RpcServiceManager.cs" />
+    <Compile Include="Cores\Managers\SequenceManager.cs" />
     <Compile Include="Cores\Managers\ThreadManager.cs" />
     <Compile Include="Cores\Services\ExampleService.cs" />
     <Compile Include="Interfaces\IAction.cs" />
