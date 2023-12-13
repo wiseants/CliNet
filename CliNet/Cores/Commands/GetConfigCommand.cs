@@ -10,8 +10,8 @@ using System.Text;
 
 namespace CliNet.Cores.Commands
 {
-    [Verb("set.enable", HelpText = "활성화/비활성화 명령을 보냅니다.")]
-    internal class SetEnableCommand : Interfaces.IAction
+    [Verb("get.config", HelpText = "설정 읽기 명령을 보냅니다.")]
+    internal class GetConfigCommand : Interfaces.IAction
     {
         #region Fields
 
@@ -44,13 +44,6 @@ namespace CliNet.Cores.Commands
             set;
         } = 2000;
 
-        [Option('e', "enable", Required = true, HelpText = "활성화/비활성화 파라미터. 0:비활성화, 1:활성화")]
-        public int IsEnable
-        {
-            get;
-            set;
-        }
-
         #endregion
 
         #region Public methods
@@ -66,10 +59,9 @@ namespace CliNet.Cores.Commands
                     sock.SendTimeout = Timeout;
                     sock.ReceiveTimeout = Timeout;
 
-                    SetEnableRequestInfo requestInfo = new SetEnableRequestInfo()
+                    GetConfigRequestInfo requestInfo = new GetConfigRequestInfo()
                     {
                         SeqNo = SequenceManager.Instance.GetNext(),
-                        IsEnable = IsEnable == 1
                     };
 
                     string request = JsonConvert.SerializeObject(requestInfo);
