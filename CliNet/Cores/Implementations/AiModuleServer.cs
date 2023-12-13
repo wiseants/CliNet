@@ -90,19 +90,22 @@ namespace CliNet.Cores.Implementations
                     byte[] buffer = new byte[BUFFER_SIZE];
                     int receivedLength = client.Receive(buffer);
 
-                    string command = Encoding.Default.GetString(buffer, 0, receivedLength);
+                    string request = Encoding.Default.GetString(buffer, 0, receivedLength);
+                    Console.WriteLine($"받은 명령:\n {request}");
 
-                    Console.WriteLine($"받은 명령:\n {command}");
+                    string response = "{}";
 
-                    PacketInfo receivedPacket = JsonConvert.DeserializeObject<PacketInfo>(command);
+                    PacketInfo receivedPacket = JsonConvert.DeserializeObject<PacketInfo>(request);
                     if (receivedPacket != null)
                     {
                         if (RESPONSE_BUILDER_MAP.TryGetValue(receivedPacket.Name, out Func<PacketInfo, object> builder))
                         {
-                            string response = JsonConvert.SerializeObject(builder(receivedPacket));
-                            client.Send(Encoding.ASCII.GetBytes(response), SocketFlags.None);
+                            response = JsonConvert.SerializeObject(builder(receivedPacket));
                         }
                     }
+
+                    client.Send(Encoding.ASCII.GetBytes(response), SocketFlags.None);
+                    Console.WriteLine($"보낸 명령:\n {response}");
                 }
                 while (_sock != null);
             }
