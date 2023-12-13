@@ -1,5 +1,6 @@
 ﻿using CliNet.Models.Commands;
 using Common.Interfaces;
+using Common.Tools;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -20,8 +21,16 @@ namespace CliNet.Cores.Implementations
 
         #region Fields
 
+        private static readonly string IS_ENALBE_KEY = "IsEnable";
+        private static readonly string LISTEN_TYPE = "ListenType";
+        private static readonly string LISTEN_PORT_NO = "ListenPortNo";
+        private static readonly string SEND_TYPE = "SendType";
+        private static readonly string SEND_IP_ADDRESS = "SendIpAddress";
+        private static readonly string SEND_PORT_NO = "SendPortNo";
+
         private readonly int BUFFER_SIZE = 1024;
-        private readonly Dictionary<string, Action<PacketInfo>> REQUEST_COMMAND_MAP = new Dictionary<string, Action<PacketInfo>>()
+
+        private readonly Dictionary<string, Action<string>> REQUEST_COMMAND_MAP = new Dictionary<string, Action<string>>()
         {
             { "SetEnable", RunSetEnable },
             { "GetConfig", RunGetConfig },
@@ -55,64 +64,6 @@ namespace CliNet.Cores.Implementations
             get;
             set;
         }
-
-        /// <summary>
-        /// 동작 켜기/끄기
-        /// true:켜기, false:끄기.
-        /// </summary>
-        public bool IsEnable
-        {
-            get;
-            set;
-        } = false;
-
-        /// <summary>
-        /// 영상 스트림 받기 타입
-        /// 0:유니캐스트, 1:멀티캐스트
-        /// </summary>
-        public int ListenType
-        {
-            get;
-            set;
-        } = 0;
-
-        /// <summary>
-        /// 영상 스트림 받기 포트 번호.
-        /// </summary>
-        public int ListenPortNo
-        {
-            get;
-            set;
-        } = 0;
-
-        /// <summary>
-        /// 가공된 영상 스트림 보내기 타입
-        /// 0:유니캐스트, 1:멀티캐스트
-        /// </summary>
-        public int SendType
-        {
-            get;
-            set;
-        } = 0;
-
-
-        /// <summary>
-        /// 가공된 영상 스트림 보내기 IP 주소.
-        /// </summary>
-        public string SendIpAddress
-        {
-            get;
-            set;
-        } = "127.0.0.1";
-
-        /// <summary>
-        /// 가공된 영상 스트림 보내기 포트 번호.
-        /// </summary>
-        public int SendPortNo
-        {
-            get;
-            set;
-        } = 0;
 
         #endregion
 
@@ -161,9 +112,9 @@ namespace CliNet.Cores.Implementations
                     PacketInfo receivedPacket = JsonConvert.DeserializeObject<PacketInfo>(request);
                     if (receivedPacket != null)
                     {
-                        if (REQUEST_COMMAND_MAP.TryGetValue(receivedPacket.Name, out Action<PacketInfo> command))
+                        if (REQUEST_COMMAND_MAP.TryGetValue(receivedPacket.Name, out Action<string> command))
                         {
-                            command(receivedPacket);
+                            command(request);
                         }
 
                         if (RESPONSE_BUILDER_MAP.TryGetValue(receivedPacket.Name, out Func<PacketInfo, object> builder))
@@ -189,19 +140,30 @@ namespace CliNet.Cores.Implementations
             Finished?.Invoke(0);
         }
 
-        private static void RunSetEnable(PacketInfo request)
+        private static void RunSetEnable(string request)
         {
-            Console.WriteLine("RunSetEnable");
+            SetEnableRequestInfo requestInfo = JsonConvert.DeserializeObject<SetEnableRequestInfo>(request);
+            if (requestInfo != null)
+            {
+                AppConfiguration.SetAppConfig(IS_ENALBE_KEY, requestInfo.IsEnable.ToString());
+            }
         }
 
-        private static void RunGetConfig(PacketInfo request)
+        private static void RunGetConfig(string request)
         {
-            Console.WriteLine("RunGetConfig");
         }
 
-        private static void RunSetConfig(PacketInfo request)
+        private static void RunSetConfig(string request)
         {
-            Console.WriteLine("RunSetConfig");
+            SetConfigRequestInfo requestInfo = JsonConvert.DeserializeObject<SetConfigRequestInfo>(request);
+            if (requestInfo != null)
+            {
+                AppConfiguration.SetAppConfig(LISTEN_TYPE, requestInfo.ListenType.ToString());
+                AppConfiguration.SetAppConfig(LISTEN_PORT_NO, requestInfo.ListenPortNo.ToString());
+                AppConfiguration.SetAppConfig(SEND_TYPE, requestInfo.SendType.ToString());
+                AppConfiguration.SetAppConfig(SEND_IP_ADDRESS, requestInfo.SendIpAddress.ToString());
+                AppConfiguration.SetAppConfig(SEND_PORT_NO, requestInfo.SendPortNo.ToString());
+            }
         }
 
         private static object BuildSetEnableResponse(PacketInfo request)
@@ -220,6 +182,12 @@ namespace CliNet.Cores.Implementations
             GetConfigResponseInfo result = new GetConfigResponseInfo()
             {
                 SeqNo = request.SeqNo,
+                IsEnable = Convert.ToBoolean(AppConfiguration.GetAppConfig(IS_ENALBE_KEY)),
+                ListenType = Convert.ToInt32(AppConfiguration.GetAppConfig(LISTEN_TYPE)),
+                ListenPortNo = Convert.ToInt32(AppConfiguration.GetAppConfig(LISTEN_PORT_NO)),
+                SendType = Convert.ToInt32(AppConfiguration.GetAppConfig(SEND_TYPE)),
+                SendIpAddress = AppConfiguration.GetAppConfig(SEND_IP_ADDRESS),
+                SendPortNo = Convert.ToInt32(AppConfiguration.GetAppConfig(SEND_PORT_NO)),
                 ReturnCode = 1,
             };
 
