@@ -1,6 +1,7 @@
 ﻿using Common.Interfaces;
 using Common.Templates;
 using NLog;
+using System;
 using System.Collections.Concurrent;
 using System.Linq;
 
@@ -48,6 +49,15 @@ namespace CliNet.Cores.Managers
                     LogManager.GetCurrentClassLogger().Info($"{key} 스레드를 제거합니다.");
                 }
             }
+            else
+            {
+                Console.WriteLine("서버가 존재하지 않습니다.");
+            }
+        }
+
+        public bool IsExist(string key)
+        {
+            return _threadMap.ContainsKey(key);
         }
 
         public void Release()

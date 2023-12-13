@@ -1,6 +1,7 @@
 ﻿using CliNet.Cores.Implementations;
 using CliNet.Cores.Managers;
 using CommandLine;
+using System;
 
 namespace CliNet.Cores.Commands
 {
@@ -24,7 +25,7 @@ namespace CliNet.Cores.Commands
         {
             get;
             set;
-        } = 30251;
+        } = 15300;
 
         #endregion
 
@@ -32,6 +33,12 @@ namespace CliNet.Cores.Commands
 
         public int Action()
         {
+            if (ThreadManager.Instance.IsExist("print"))
+            {
+                Console.WriteLine("서버가 이미 동작중입니다.");
+                return 0;
+            }
+
             AiModuleServer server = new AiModuleServer
             {
                 Port = Port,

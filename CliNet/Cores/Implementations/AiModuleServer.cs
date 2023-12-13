@@ -18,6 +18,8 @@ namespace CliNet.Cores.Implementations
 
         #region Fields
 
+        private readonly int BUFFER_SIZE = 1024;
+
         private readonly Thread _thread;
         private Socket _sock;
 
@@ -71,7 +73,22 @@ namespace CliNet.Cores.Implementations
 
                 _sock.Bind(serverEP);
                 _sock.Listen(10);
-                _sock.BeginAccept(AcceptCallback, null);
+
+                do
+                {
+                    Socket client = _sock.Accept();
+
+                    AsyncObject obj = new AsyncObject(BUFFER_SIZE)
+                    {
+                        WorkingSocket = client
+                    };
+                    client.BeginReceive(obj.Buffer, 0, BUFFER_SIZE, 0, DataReceived, obj);
+                }
+                while (_sock != null);
+            }
+            catch (ThreadAbortException)
+            {
+                Console.WriteLine($"서버를 종료합니다.");
             }
             catch (Exception ex)
             {
