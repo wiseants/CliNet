@@ -14,11 +14,6 @@ namespace CliNet.Models.Commands
         {
             Type = 0;
             Name = "SetConfig";
-            ListenType = 0;
-            ListenPortNo = 15100;
-            SendType = 0;
-            SendIpAddress = "127.0.0.1";
-            SendPortNo = 15200;
         }
 
         #endregion

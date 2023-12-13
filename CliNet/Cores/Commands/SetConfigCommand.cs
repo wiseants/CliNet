@@ -71,14 +71,14 @@ namespace CliNet.Cores.Commands
         {
             get;
             set;
-        }
+        } = "127.0.0.1";
 
         [Option('d', "send.port", Required = false, HelpText = "보내기 스트리밍 포트번호.")]
         public int SendPortNo
         {
             get;
             set;
-        }
+        } = 0;
 
         #endregion
 
