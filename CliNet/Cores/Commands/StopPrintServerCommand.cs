@@ -3,7 +3,7 @@ using CommandLine;
 
 namespace CliNet.Cores.Commands
 {
-    [Verb("stop.print", HelpText = "트래커 테스트를 위한 JSON 프린트 서버 시작.")]
+    [Verb("stop.print", HelpText = "테스트를 위한 JSON 프린트 서버 시작.")]
     internal class StopPrintServerCommand : Interfaces.IAction
     {
         #region Constructors

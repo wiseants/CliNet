@@ -111,17 +111,8 @@
     <Compile Include="Constant.cs" />
     <Compile Include="Cores\Commands\StopPrintServerCommand.cs" />
     <Compile Include="Cores\Commands\StartPrintServerCommand.cs" />
-    <Compile Include="Cores\Commands\StopUploadCommand.cs" />
-    <Compile Include="Cores\Commands\StartUploadCommand.cs" />
     <Compile Include="Cores\Commands\ChangeTrackCommand.cs" />
-    <Compile Include="Cores\Commands\DecreaseCommand.cs" />
-    <Compile Include="Cores\Commands\EchoServerCommand.cs" />
     <Compile Include="Cores\Commands\ExitCommand.cs" />
-    <Compile Include="Cores\Commands\EchoClientCommand.cs" />
-    <Compile Include="Cores\Commands\IncreaseCommand.cs" />
-    <Compile Include="Cores\Commands\PrintServerCommand.cs" />
-    <Compile Include="Cores\Commands\UdpBypassCommand.cs" />
-    <Compile Include="Cores\Commands\RpcServiceCommand.cs" />
     <Compile Include="Cores\Commands\ChangeUpdateCommand.cs" />
     <Compile Include="Cores\Implementations\FriendGreeterImpl.cs" />
     <Compile Include="Cores\Implementations\AiModuleServer.cs" />
@@ -131,6 +122,13 @@
     <Compile Include="Cores\Services\ExampleService.cs" />
     <Compile Include="Interfaces\IAction.cs" />
     <Compile Include="Models\AsyncObject.cs" />
+    <Compile Include="Models\Commands\SetConfigResponseInfo.cs" />
+    <Compile Include="Models\Commands\SetConfigRequestInfo.cs" />
+    <Compile Include="Models\Commands\PacketInfo.cs" />
+    <Compile Include="Models\Commands\GetConfigRequestInfo.cs" />
+    <Compile Include="Models\Commands\GetConfigResponseInfo.cs" />
+    <Compile Include="Models\Commands\SetEnableResponseInfo.cs" />
+    <Compile Include="Models\Commands\SetEnableRequestInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
