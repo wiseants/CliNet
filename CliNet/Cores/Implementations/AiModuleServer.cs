@@ -84,7 +84,7 @@ namespace CliNet.Cores.Implementations
                     };
                     client.BeginReceive(obj.Buffer, 0, BUFFER_SIZE, 0, DataReceived, obj);
                 }
-                while (_sock != null);
+                while (_sock != null && _sock.Connected);
             }
             catch (ThreadAbortException)
             {
