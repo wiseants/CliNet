@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using Common.Models;
+using Newtonsoft.Json;
+using System;
 
 namespace CliNet.Models.Commands
 {
@@ -8,6 +10,8 @@ namespace CliNet.Models.Commands
     [JsonObject(MemberSerialization.OptOut)]
     public class PacketInfo
     {
+        #region Properties
+
         /// <summary>
         /// 명령 타입.
         /// 0:요청, 1:응답.
@@ -37,5 +41,21 @@ namespace CliNet.Models.Commands
             get;
             set;
         }
+
+        #endregion
+
+        #region Override methods
+
+        public override bool Equals(object obj)
+        {
+            return (obj is ComInfo rate) && Name.Equals(rate.Name, StringComparison.CurrentCultureIgnoreCase);
+        }
+
+        public override int GetHashCode()
+        {
+            return Name.GetHashCode();
+        }
+
+        #endregion
     }
 }

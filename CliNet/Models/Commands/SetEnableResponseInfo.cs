@@ -8,6 +8,16 @@ namespace CliNet.Models.Commands
     [JsonObject(MemberSerialization.OptOut)]
     public class SetEnableResponseInfo : PacketInfo
     {
+        #region Constructors
+
+        public SetEnableResponseInfo()
+        {
+            Type = 1;
+            Name = "SetEnable";
+        }
+
+        #endregion
+
         #region Properties
 
         /// <summary>

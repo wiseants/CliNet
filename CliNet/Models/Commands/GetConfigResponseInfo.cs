@@ -8,6 +8,16 @@ namespace CliNet.Models.Commands
     [JsonObject(MemberSerialization.OptOut)]
     public class GetConfigResponseInfo : PacketInfo
     {
+        #region Constructors
+
+        public GetConfigResponseInfo()
+        {
+            Type = 1;
+            Name = "GetConfig";
+        }
+
+        #endregion
+
         #region Properties
 
         /// <summary>
