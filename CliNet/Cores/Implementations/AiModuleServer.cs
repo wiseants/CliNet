@@ -1,5 +1,4 @@
-﻿using CliNet.Models;
-using Common.Interfaces;
+﻿using Common.Interfaces;
 using System;
 using System.Net;
 using System.Net.Sockets;
@@ -78,13 +77,14 @@ namespace CliNet.Cores.Implementations
                 {
                     Socket client = _sock.Accept();
 
-                    AsyncObject obj = new AsyncObject(BUFFER_SIZE)
-                    {
-                        WorkingSocket = client
-                    };
-                    client.BeginReceive(obj.Buffer, 0, BUFFER_SIZE, 0, DataReceived, obj);
+                    byte[] buffer = new byte[BUFFER_SIZE];
+                    int receivedLength = client.Receive(buffer);
+
+                    string command = Encoding.Default.GetString(buffer, 0, receivedLength);
+
+                    Console.WriteLine($"받은 명령:\n {command}");
                 }
-                while (_sock != null && _sock.Connected);
+                while (_sock != null);
             }
             catch (ThreadAbortException)
             {
@@ -96,41 +96,6 @@ namespace CliNet.Cores.Implementations
             }
 
             Finished?.Invoke(0);
-        }
-
-        private void AcceptCallback(IAsyncResult ar)
-        {
-            try
-            {
-                Socket client = _sock.EndAccept(ar);
-                AsyncObject obj = new AsyncObject(1920 * 1080 * 3)
-                {
-                    WorkingSocket = client
-                };
-                client.BeginReceive(obj.Buffer, 0, 1920 * 1080 * 3, 0, DataReceived, obj);
-
-                _sock.BeginAccept(AcceptCallback, null);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
-        }
-
-        private void DataReceived(IAsyncResult ar)
-        {
-            if (ar.AsyncState is AsyncObject asyncObject)
-            {
-                int receivedLength = asyncObject.WorkingSocket.EndReceive(ar);
-
-                byte[] buffer = new byte[receivedLength];
-
-                Array.Copy(asyncObject.Buffer, 0, buffer, 0, receivedLength);
-
-                string command = Encoding.Default.GetString(buffer, 0, receivedLength);
-
-                Console.WriteLine($"받은 명령:\n {command}");
-            }
         }
 
         #endregion
