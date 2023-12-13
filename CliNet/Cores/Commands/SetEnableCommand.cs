@@ -1,20 +1,17 @@
 ﻿using CliNet.Cores.Managers;
-using CliNet.Interfaces;
 using CliNet.Models.Commands;
 using CommandLine;
 using Common.Tools;
 using Newtonsoft.Json;
-using NLog.Targets;
 using System;
 using System.Net;
 using System.Net.Sockets;
-using System.Runtime;
 using System.Text;
 
 namespace CliNet.Cores.Commands
 {
     [Verb("set.enable", HelpText = "활성화/비활성화 명령을 보냅니다.")]
-    internal class SetEnableCommand : IAction
+    internal class SetEnableCommand : Interfaces.IAction
     {
         #region Properties
 
@@ -47,8 +44,6 @@ namespace CliNet.Cores.Commands
 
         public int Action()
         {
-            string message;
-
             try
             {
                 using (Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp))
@@ -56,24 +51,22 @@ namespace CliNet.Cores.Commands
                     IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(ServerIpAddress), Port);
                     sock.Connect(endPoint);
 
-                    Console.WriteLine(string.Format("{0} 명령을 전송합니다.", IsEnable == 0 ? "비활성화" : "활성화"));
-
                     SetEnableRequestInfo requestInfo = new SetEnableRequestInfo()
                     {
                         SeqNo = SequenceManager.Instance.GetNext(),
                         IsEnable = IsEnable == 1
                     };
 
-                    string writeString = JsonConvert.SerializeObject(requestInfo);
-                    Console.WriteLine(writeString);
+                    string request = JsonConvert.SerializeObject(requestInfo);
+                    Console.WriteLine($"보낸 명령:\n {request}");
 
-                    sock.Send(Encoding.ASCII.GetBytes(writeString), SocketFlags.None);
+                    sock.Send(Encoding.ASCII.GetBytes(request), SocketFlags.None);
 
-                    //byte[] receiverBuff = new byte[128];
-                    //int receivedLength = sock.Receive(receiverBuff);
+                    byte[] receiverBuff = new byte[128];
+                    int receivedLength = sock.Receive(receiverBuff);
 
-                    //string result = Encoding.Default.GetString(receiverBuff, 0, receivedLength);
-                    //Console.WriteLine($"<< {result}");
+                    string response = Encoding.Default.GetString(receiverBuff, 0, receivedLength);
+                    Console.WriteLine($"받은 명령:\n {response}");
 
                     // 소켓 닫기.
                     sock.Close();
@@ -81,7 +74,7 @@ namespace CliNet.Cores.Commands
             }
             catch (Exception ex) 
             {
-                message = $"예외 발생: {ex.Message}";
+                Console.WriteLine($"예외 발생: {ex.Message}");
             }
 
             return 0;
