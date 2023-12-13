@@ -5,7 +5,7 @@ using System;
 
 namespace CliNet.Cores.Commands
 {
-    [Verb("start.print", HelpText = "테스트를 위한 JSON 프린트 서버 시작.")]
+    [Verb("start.print", HelpText = "JSON 프린트 서버 시작.")]
     internal class StartPrintServerCommand : Interfaces.IAction
     {
         #region Constructors
