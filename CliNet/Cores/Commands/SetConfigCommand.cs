@@ -10,7 +10,7 @@ using System.Text;
 
 namespace CliNet.Cores.Commands
 {
-    [Verb("set.config", HelpText = "설정 쓰기 명령을 보냅니다.")]
+    [Verb("set.config", HelpText = "전체 설정 쓰기 명령을 보냅니다.")]
     internal class SetConfigCommand : Interfaces.IAction
     {
         #region Fields

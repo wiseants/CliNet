@@ -10,7 +10,7 @@ using System.Text;
 
 namespace CliNet.Cores.Commands
 {
-    [Verb("set.enable", HelpText = "활성화/비활성화 명령을 보냅니다.")]
+    [Verb("set.enable", HelpText = "AI 편집 활성화/비활성화 명령을 보냅니다.")]
     internal class SetEnableCommand : Interfaces.IAction
     {
         #region Fields
@@ -44,7 +44,7 @@ namespace CliNet.Cores.Commands
             set;
         } = 2000;
 
-        [Option('e', "enable", Required = true, HelpText = "활성화/비활성화 파라미터. 0:비활성화, 1:활성화")]
+        [Option('e', "enable", Required = true, HelpText = "AI 편집 활성화/비활성화 파라미터. 0:비활성화, 1:활성화")]
         public int IsEnable
         {
             get;
