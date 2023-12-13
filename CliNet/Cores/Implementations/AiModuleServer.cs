@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
-using System.Runtime;
 using System.Text;
 using System.Threading;
 
@@ -22,6 +21,12 @@ namespace CliNet.Cores.Implementations
         #region Fields
 
         private readonly int BUFFER_SIZE = 1024;
+        private readonly Dictionary<string, Action<PacketInfo>> REQUEST_COMMAND_MAP = new Dictionary<string, Action<PacketInfo>>()
+        {
+            { "SetEnable", RunSetEnable },
+            { "GetConfig", RunGetConfig },
+            { "SetConfig", RunSetConfig },
+        };
         private readonly Dictionary<string, Func<PacketInfo, object>> RESPONSE_BUILDER_MAP = new Dictionary<string, Func<PacketInfo, object>>()
         {
             { "SetEnable", BuildSetEnableResponse },
@@ -50,6 +55,64 @@ namespace CliNet.Cores.Implementations
             get;
             set;
         }
+
+        /// <summary>
+        /// 동작 켜기/끄기
+        /// true:켜기, false:끄기.
+        /// </summary>
+        public bool IsEnable
+        {
+            get;
+            set;
+        } = false;
+
+        /// <summary>
+        /// 영상 스트림 받기 타입
+        /// 0:유니캐스트, 1:멀티캐스트
+        /// </summary>
+        public int ListenType
+        {
+            get;
+            set;
+        } = 0;
+
+        /// <summary>
+        /// 영상 스트림 받기 포트 번호.
+        /// </summary>
+        public int ListenPortNo
+        {
+            get;
+            set;
+        } = 0;
+
+        /// <summary>
+        /// 가공된 영상 스트림 보내기 타입
+        /// 0:유니캐스트, 1:멀티캐스트
+        /// </summary>
+        public int SendType
+        {
+            get;
+            set;
+        } = 0;
+
+
+        /// <summary>
+        /// 가공된 영상 스트림 보내기 IP 주소.
+        /// </summary>
+        public string SendIpAddress
+        {
+            get;
+            set;
+        } = "127.0.0.1";
+
+        /// <summary>
+        /// 가공된 영상 스트림 보내기 포트 번호.
+        /// </summary>
+        public int SendPortNo
+        {
+            get;
+            set;
+        } = 0;
 
         #endregion
 
@@ -98,6 +161,11 @@ namespace CliNet.Cores.Implementations
                     PacketInfo receivedPacket = JsonConvert.DeserializeObject<PacketInfo>(request);
                     if (receivedPacket != null)
                     {
+                        if (REQUEST_COMMAND_MAP.TryGetValue(receivedPacket.Name, out Action<PacketInfo> command))
+                        {
+                            command(receivedPacket);
+                        }
+
                         if (RESPONSE_BUILDER_MAP.TryGetValue(receivedPacket.Name, out Func<PacketInfo, object> builder))
                         {
                             response = JsonConvert.SerializeObject(builder(receivedPacket));
@@ -119,6 +187,21 @@ namespace CliNet.Cores.Implementations
             }
 
             Finished?.Invoke(0);
+        }
+
+        private static void RunSetEnable(PacketInfo request)
+        {
+            Console.WriteLine("RunSetEnable");
+        }
+
+        private static void RunGetConfig(PacketInfo request)
+        {
+            Console.WriteLine("RunGetConfig");
+        }
+
+        private static void RunSetConfig(PacketInfo request)
+        {
+            Console.WriteLine("RunSetConfig");
         }
 
         private static object BuildSetEnableResponse(PacketInfo request)
