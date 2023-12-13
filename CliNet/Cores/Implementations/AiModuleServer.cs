@@ -59,6 +59,9 @@ namespace CliNet.Cores.Implementations
 
         #region Properties
 
+        /// <summary>
+        /// 서버 포트 번호.
+        /// </summary>
         public int Port
         {
             get;
@@ -84,7 +87,7 @@ namespace CliNet.Cores.Implementations
 
         #endregion
 
-        #region Private methods
+        #region Event handlers
 
         private void ThreadProc()
         {
@@ -140,6 +143,14 @@ namespace CliNet.Cores.Implementations
             Finished?.Invoke(0);
         }
 
+        #endregion
+
+        #region Private methods
+
+        /// <summary>
+        /// SetEnable 요청 메소드.
+        /// </summary>
+        /// <param name="request"></param>
         private static void RunSetEnable(string request)
         {
             SetEnableRequestInfo requestInfo = JsonConvert.DeserializeObject<SetEnableRequestInfo>(request);
@@ -149,10 +160,18 @@ namespace CliNet.Cores.Implementations
             }
         }
 
+        /// <summary>
+        /// GetConfig 요청 메소드.
+        /// </summary>
+        /// <param name="request"></param>
         private static void RunGetConfig(string request)
         {
         }
 
+        /// <summary>
+        /// SetConfig 요청 메소드.
+        /// </summary>
+        /// <param name="request"></param>
         private static void RunSetConfig(string request)
         {
             SetConfigRequestInfo requestInfo = JsonConvert.DeserializeObject<SetConfigRequestInfo>(request);
@@ -166,6 +185,11 @@ namespace CliNet.Cores.Implementations
             }
         }
 
+        /// <summary>
+        /// SetEnable 응답 모델 빌더.
+        /// </summary>
+        /// <param name="request">요청 패킷.</param>
+        /// <returns>응답 객체.</returns>
         private static object BuildSetEnableResponse(PacketInfo request)
         {
             SetEnableResponseInfo result = new SetEnableResponseInfo()
@@ -177,6 +201,11 @@ namespace CliNet.Cores.Implementations
             return result;
         }
 
+        /// <summary>
+        /// GetConfig 응답 모델 빌더.
+        /// </summary>
+        /// <param name="request">요청 패킷.</param>
+        /// <returns>응답 객체.</returns>
         private static object BuildGetConfigResponse(PacketInfo request)
         {
             GetConfigResponseInfo result = new GetConfigResponseInfo()
@@ -194,6 +223,11 @@ namespace CliNet.Cores.Implementations
             return result;
         }
 
+        /// <summary>
+        /// SetConfig 응답 모델 빌더.
+        /// </summary>
+        /// <param name="request">요청 패킷.</param>
+        /// <returns>응답 객체.</returns>
         private static object BuildSetConfigResponse(PacketInfo request)
         {
             SetConfigResponseInfo result = new SetConfigResponseInfo()
