@@ -13,6 +13,12 @@ namespace CliNet.Cores.Commands
     [Verb("set.enable", HelpText = "활성화/비활성화 명령을 보냅니다.")]
     internal class SetEnableCommand : Interfaces.IAction
     {
+        #region Fields
+
+        private readonly int BUFFER_SIZE = 1024;
+
+        #endregion
+
         #region Properties
 
         public bool IsValid => true;
@@ -62,7 +68,7 @@ namespace CliNet.Cores.Commands
 
                     sock.Send(Encoding.ASCII.GetBytes(request), SocketFlags.None);
 
-                    byte[] receiverBuff = new byte[128];
+                    byte[] receiverBuff = new byte[BUFFER_SIZE];
                     int receivedLength = sock.Receive(receiverBuff);
 
                     string response = Encoding.Default.GetString(receiverBuff, 0, receivedLength);
