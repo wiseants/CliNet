@@ -109,6 +109,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constant.cs" />
+    <Compile Include="Cores\Commands\ListenerStartCommand.cs" />
+    <Compile Include="Cores\Commands\ListenerStopCommand.cs" />
+    <Compile Include="Cores\Commands\OpenSerialCommand.cs" />
+    <Compile Include="Cores\Commands\ServiceStartCommand.cs" />
     <Compile Include="Cores\Commands\SetConfigCommand.cs" />
     <Compile Include="Cores\Commands\GetConfigCommand.cs" />
     <Compile Include="Cores\Commands\StopPrintServerCommand.cs" />
