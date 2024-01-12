@@ -5,13 +5,13 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("CliNet")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("ACCESSWE CLI")]
+[assembly: AssemblyDescription("This program is CLI(Command Line Interface).")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("ACCESSWE")]
 [assembly: AssemblyProduct("CliNet")]
-[assembly: AssemblyCopyright("Copyright ©  2021")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCopyright("Copyright 2023. ACCESSWE inc. all rights reserved.")]
+[assembly: AssemblyTrademark("hcan")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
