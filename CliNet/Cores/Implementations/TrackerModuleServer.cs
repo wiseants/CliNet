@@ -1,12 +1,5 @@
-﻿using CliNet.Models.Commands;
-using Common.Interfaces;
-using Common.Tools;
-using MiscUtil;
-using Nest;
-using Newtonsoft.Json;
+﻿using Common.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -23,30 +16,10 @@ namespace CliNet.Cores.Implementations
 
         #region Fields
 
-        private static readonly string IS_ENALBE_KEY = "IsEnable";
-        private static readonly string LISTEN_TYPE = "ListenType";
-        private static readonly string LISTEN_PORT_NO = "ListenPortNo";
-        private static readonly string SEND_TYPE = "SendType";
-        private static readonly string SEND_IP_ADDRESS = "SendIpAddress";
-        private static readonly string SEND_PORT_NO = "SendPortNo";
-
-        private readonly int BUFFER_SIZE = 1024;
-
-        private readonly Dictionary<string, Action<string>> REQUEST_COMMAND_MAP = new Dictionary<string, Action<string>>()
-        {
-            { "SetEnable", RunSetEnable },
-            { "GetConfig", RunGetConfig },
-            { "SetConfig", RunSetConfig },
-        };
-        private readonly Dictionary<string, Func<PacketInfo, object>> RESPONSE_BUILDER_MAP = new Dictionary<string, Func<PacketInfo, object>>()
-        {
-            { "SetEnable", BuildSetEnableResponse },
-            { "GetConfig", BuildGetConfigResponse },
-            { "SetConfig", BuildSetConfigResponse },
-        };
+        public static readonly int TIMEOUT_MS = 500;
+        public static readonly int SEND_INTERVAL_MS = 250;
 
         private readonly Thread _thread;
-        private Socket _sock;
 
         #endregion
 
@@ -81,10 +54,9 @@ namespace CliNet.Cores.Implementations
 
         public void Stop()
         {
-            _sock?.Close();
-            _sock = null;
-
             _thread.Abort();
+
+            Thread.Sleep(TIMEOUT_MS);
         }
 
         #endregion
@@ -93,33 +65,50 @@ namespace CliNet.Cores.Implementations
 
         private void ThreadProc()
         {
-            using (UdpClient udpClient = new UdpClient(Port))
+            try
             {
-                udpClient.Client.SendTimeout = 100;
-                udpClient.Client.ReceiveTimeout = 150;
-
-                while(true)
+                using (UdpClient udpClient = new UdpClient(Port))
                 {
-                    try
+                    udpClient.Client.SendTimeout = TIMEOUT_MS;
+                    udpClient.Client.ReceiveTimeout = TIMEOUT_MS;
+
+                    _ = udpClient.ReceiveAsync().ContinueWith(x =>
                     {
-                        IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), Port);
-                        byte[] receivedBuffer = udpClient.Receive(ref endPoint);
-
-                        string request = Encoding.Default.GetString(receivedBuffer, 0, receivedBuffer.Length);
-                        Console.WriteLine($"받은 명령:\n {request}");
-
-                        receivedBuffer = Encoding.UTF8.GetBytes("{response}");
-                        int sentByteNumber = udpClient.Send(receivedBuffer, receivedBuffer.Length, endPoint);
-                        if (sentByteNumber != receivedBuffer.Length)
+                        if (x == null)
                         {
+                            NLog.LogManager.GetCurrentClassLogger().Error("받은 결과 비었음.");
+                            return;
                         }
 
-                        Console.WriteLine($"보낸 사이즈:\n {sentByteNumber}");
-                    }
-                    catch { }
+                        if (x.IsFaulted)
+                        {
+                            NLog.LogManager.GetCurrentClassLogger().Error("받은 결과 문제 발생.");
+                            return;
+                        }
 
-                    Thread.Sleep(100);
+                        Console.WriteLine(Encoding.Default.GetString(x.Result.Buffer));
+
+                        byte[] sendBuffer = new byte[x.Result.Buffer.Length];
+                        Array.Copy(x.Result.Buffer, sendBuffer, 0);
+
+                        int sentByteNumber = udpClient.Send(sendBuffer, sendBuffer.Length, x.Result.RemoteEndPoint);
+
+                        Console.WriteLine($"받은 버퍼 길이({x.Result.Buffer.Length}), 보낸 길이({sendBuffer.Length})");
+                    });
+
+                    while (true)
+                    {
+                        Thread.Sleep(SEND_INTERVAL_MS);
+                    }
                 }
+            }
+            catch (ThreadAbortException)
+            {
+                Console.WriteLine($"서버를 종료합니다.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"예외 발생: {ex.Message}");
             }
 
             Finished?.Invoke(0);
@@ -128,98 +117,6 @@ namespace CliNet.Cores.Implementations
         #endregion
 
         #region Private methods
-
-        /// <summary>
-        /// SetEnable 요청 메소드.
-        /// </summary>
-        /// <param name="request"></param>
-        private static void RunSetEnable(string request)
-        {
-            SetEnableRequestInfo requestInfo = JsonConvert.DeserializeObject<SetEnableRequestInfo>(request);
-            if (requestInfo != null)
-            {
-                AppConfiguration.SetAppConfig(IS_ENALBE_KEY, requestInfo.IsEnable.ToString());
-            }
-        }
-
-        /// <summary>
-        /// GetConfig 요청 메소드.
-        /// </summary>
-        /// <param name="request"></param>
-        private static void RunGetConfig(string request)
-        {
-        }
-
-        /// <summary>
-        /// SetConfig 요청 메소드.
-        /// </summary>
-        /// <param name="request"></param>
-        private static void RunSetConfig(string request)
-        {
-            SetConfigRequestInfo requestInfo = JsonConvert.DeserializeObject<SetConfigRequestInfo>(request);
-            if (requestInfo != null)
-            {
-                AppConfiguration.SetAppConfig(LISTEN_TYPE, requestInfo.ListenType.ToString());
-                AppConfiguration.SetAppConfig(LISTEN_PORT_NO, requestInfo.ListenPortNo.ToString());
-                AppConfiguration.SetAppConfig(SEND_TYPE, requestInfo.SendType.ToString());
-                AppConfiguration.SetAppConfig(SEND_IP_ADDRESS, requestInfo.SendIpAddress.ToString());
-                AppConfiguration.SetAppConfig(SEND_PORT_NO, requestInfo.SendPortNo.ToString());
-            }
-        }
-
-        /// <summary>
-        /// SetEnable 응답 모델 빌더.
-        /// </summary>
-        /// <param name="request">요청 패킷.</param>
-        /// <returns>응답 객체.</returns>
-        private static object BuildSetEnableResponse(PacketInfo request)
-        {
-            SetEnableResponseInfo result = new SetEnableResponseInfo()
-            {
-                SeqNo = request.SeqNo,
-                ReturnCode = 1,
-            };
-
-            return result;
-        }
-
-        /// <summary>
-        /// GetConfig 응답 모델 빌더.
-        /// </summary>
-        /// <param name="request">요청 패킷.</param>
-        /// <returns>응답 객체.</returns>
-        private static object BuildGetConfigResponse(PacketInfo request)
-        {
-            GetConfigResponseInfo result = new GetConfigResponseInfo()
-            {
-                SeqNo = request.SeqNo,
-                IsEnable = Convert.ToBoolean(AppConfiguration.GetAppConfig(IS_ENALBE_KEY)),
-                ListenType = Convert.ToInt32(AppConfiguration.GetAppConfig(LISTEN_TYPE)),
-                ListenPortNo = Convert.ToInt32(AppConfiguration.GetAppConfig(LISTEN_PORT_NO)),
-                SendType = Convert.ToInt32(AppConfiguration.GetAppConfig(SEND_TYPE)),
-                SendIpAddress = AppConfiguration.GetAppConfig(SEND_IP_ADDRESS),
-                SendPortNo = Convert.ToInt32(AppConfiguration.GetAppConfig(SEND_PORT_NO)),
-                ReturnCode = 1,
-            };
-
-            return result;
-        }
-
-        /// <summary>
-        /// SetConfig 응답 모델 빌더.
-        /// </summary>
-        /// <param name="request">요청 패킷.</param>
-        /// <returns>응답 객체.</returns>
-        private static object BuildSetConfigResponse(PacketInfo request)
-        {
-            SetConfigResponseInfo result = new SetConfigResponseInfo()
-            {
-                SeqNo = request.SeqNo,
-                ReturnCode = 1,
-            };
-
-            return result;
-        }
 
         #endregion
     }
