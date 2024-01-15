@@ -1,5 +1,6 @@
 ﻿using Common.Interfaces;
 using System;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -20,6 +21,7 @@ namespace CliNet.Cores.Implementations
         public static readonly int SEND_INTERVAL_MS = 250;
 
         private readonly Thread _thread;
+        private UdpClient _udpClient;
 
         #endregion
 
@@ -67,39 +69,16 @@ namespace CliNet.Cores.Implementations
         {
             try
             {
-                using (UdpClient udpClient = new UdpClient(Port))
+                _udpClient = new UdpClient(Port);
+
+                _udpClient.Client.SendTimeout = TIMEOUT_MS;
+                _udpClient.Client.ReceiveTimeout = TIMEOUT_MS;
+
+                _ = _udpClient.BeginReceive(new AsyncCallback(ReceivedProc), null);
+
+                while (true)
                 {
-                    udpClient.Client.SendTimeout = TIMEOUT_MS;
-                    udpClient.Client.ReceiveTimeout = TIMEOUT_MS;
-
-                    _ = udpClient.ReceiveAsync().ContinueWith(x =>
-                    {
-                        if (x == null)
-                        {
-                            NLog.LogManager.GetCurrentClassLogger().Error("받은 결과 비었음.");
-                            return;
-                        }
-
-                        if (x.IsFaulted)
-                        {
-                            NLog.LogManager.GetCurrentClassLogger().Error("받은 결과 문제 발생.");
-                            return;
-                        }
-
-                        Console.WriteLine(Encoding.Default.GetString(x.Result.Buffer));
-
-                        byte[] sendBuffer = new byte[x.Result.Buffer.Length];
-                        Array.Copy(x.Result.Buffer, sendBuffer, 0);
-
-                        int sentByteNumber = udpClient.Send(sendBuffer, sendBuffer.Length, x.Result.RemoteEndPoint);
-
-                        Console.WriteLine($"받은 버퍼 길이({x.Result.Buffer.Length}), 보낸 길이({sendBuffer.Length})");
-                    });
-
-                    while (true)
-                    {
-                        Thread.Sleep(SEND_INTERVAL_MS);
-                    }
+                    Thread.Sleep(SEND_INTERVAL_MS);
                 }
             }
             catch (ThreadAbortException)
@@ -112,6 +91,23 @@ namespace CliNet.Cores.Implementations
             }
 
             Finished?.Invoke(0);
+        }
+
+        private void ReceivedProc(IAsyncResult res)
+        {
+            IPEndPoint remoteIpEndPoint = new IPEndPoint(IPAddress.Any, 8000);
+            byte[] buffer = _udpClient.EndReceive(res, ref remoteIpEndPoint);
+
+            Console.WriteLine(Encoding.Default.GetString(buffer));
+
+            byte[] sendBuffer = new byte[buffer.Length];
+            Array.Copy(buffer, sendBuffer, 0);
+
+            int sentByteNumber = _udpClient.Send(sendBuffer, sendBuffer.Length, remoteIpEndPoint);
+
+            Console.WriteLine($"받은 버퍼 길이({buffer.Length}), 보낸 길이({sentByteNumber})");
+
+            _ = _udpClient.BeginReceive(new AsyncCallback(ReceivedProc), null);
         }
 
         #endregion
