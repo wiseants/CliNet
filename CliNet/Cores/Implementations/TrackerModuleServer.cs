@@ -1,4 +1,5 @@
 ﻿using Common.Interfaces;
+using Nest;
 using System;
 using System.Net;
 using System.Net.Sockets;
@@ -98,7 +99,7 @@ namespace CliNet.Cores.Implementations
             IPEndPoint remoteIpEndPoint = new IPEndPoint(IPAddress.Any, 8000);
             byte[] buffer = _udpClient.EndReceive(res, ref remoteIpEndPoint);
 
-            Console.WriteLine(Encoding.Default.GetString(buffer));
+            Console.WriteLine(BitConverter.ToString(buffer));
 
             byte[] sendBuffer = new byte[buffer.Length];
             Array.Copy(buffer, sendBuffer, 0);
