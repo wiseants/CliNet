@@ -102,7 +102,7 @@ namespace CliNet.Cores.Implementations
             Console.WriteLine(BitConverter.ToString(buffer));
 
             byte[] sendBuffer = new byte[buffer.Length];
-            Array.Copy(buffer, sendBuffer, 0);
+            Array.Copy(buffer, sendBuffer, buffer.Length);
 
             int sentByteNumber = _udpClient.Send(sendBuffer, sendBuffer.Length, remoteIpEndPoint);
 
