@@ -115,10 +115,13 @@
     <Compile Include="Cores\Commands\ServiceStartCommand.cs" />
     <Compile Include="Cores\Commands\SetConfigCommand.cs" />
     <Compile Include="Cores\Commands\GetConfigCommand.cs" />
+    <Compile Include="Cores\Commands\StartPrintServerByUdpCommand.cs" />
+    <Compile Include="Cores\Commands\StopPrintServerByUdpCommand.cs" />
     <Compile Include="Cores\Commands\StopPrintServerCommand.cs" />
     <Compile Include="Cores\Commands\StartPrintServerCommand.cs" />
     <Compile Include="Cores\Commands\SetEnableCommand.cs" />
     <Compile Include="Cores\Commands\ExitCommand.cs" />
+    <Compile Include="Cores\Implementations\TrackerModuleServer.cs" />
     <Compile Include="Cores\Implementations\FriendGreeterImpl.cs" />
     <Compile Include="Cores\Implementations\AiModuleServer.cs" />
     <Compile Include="Cores\Implementations\PrintServer.cs" />
