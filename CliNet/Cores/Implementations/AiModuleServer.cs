@@ -1,7 +1,6 @@
 ﻿using CliNet.Models.Commands;
 using Common.Interfaces;
 using Common.Tools;
-using Nest;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -194,7 +193,11 @@ namespace CliNet.Cores.Implementations
         /// <param name="request"></param>
         private static void RunSendTo(string request)
         {
-            Console.WriteLine("[나에게 보내라] 명령 수행.");
+            SendToRequestInfo requestInfo = JsonConvert.DeserializeObject<SendToRequestInfo>(request);
+            if (requestInfo != null)
+            {
+                Console.WriteLine($"트립[{requestInfo.TripIpAddress}]은 [나에게 보내라] 명령 수행.");
+            }
         }
 
         /// <summary>
