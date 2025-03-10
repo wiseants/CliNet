@@ -226,7 +226,7 @@ namespace CliNet.Cores.Implementations
             GetConfigResponseInfo result = new GetConfigResponseInfo()
             {
                 SeqNo = request.SeqNo,
-                IsEnable = Convert.ToBoolean(AppConfiguration.GetAppConfig(IS_ENALBE_KEY)),
+                //IsEnable = Convert.ToBoolean(AppConfiguration.GetAppConfig(IS_ENALBE_KEY)),
                 ListenType = Convert.ToInt32(AppConfiguration.GetAppConfig(LISTEN_TYPE)),
                 ListenPortNo = Convert.ToInt32(AppConfiguration.GetAppConfig(LISTEN_PORT_NO)),
                 SendType = Convert.ToInt32(AppConfiguration.GetAppConfig(SEND_TYPE)),

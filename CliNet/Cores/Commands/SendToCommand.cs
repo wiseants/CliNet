@@ -2,6 +2,7 @@
 using CliNet.Models.Commands;
 using CommandLine;
 using Common.Tools;
+using Nest;
 using Newtonsoft.Json;
 using System;
 using System.Net;
@@ -28,14 +29,14 @@ namespace CliNet.Cores.Commands
         {
             get;
             set;
-        } = IPAddressTool.LocalIpAddress;
+        } = "192.168.4.81";
 
         [Option('p', "port", Required = false, HelpText = "서버 포트 번호.")]
         public int Port
         {
             get;
             set;
-        } = 15300;
+        } = 33333;
 
         [Option('t', "timeout", Required = false, HelpText = "타임아웃 시간(ms)")]
         public int Timeout
@@ -44,12 +45,19 @@ namespace CliNet.Cores.Commands
             set;
         } = 2000;
 
-        [Option('r', "trip.address", Required = true, HelpText = "요청을 보내는 카메라 트립 IP 주소.")]
+        [Option('r', "trip.address", Required = false, HelpText = "요청을 보내는 카메라 트립 IP 주소.")]
         public string TripIpAddress
         {
             get;
             set;
-        } = IPAddressTool.LocalIpAddress;
+        } = "192.168.4.31";
+
+        [Option('o', "trip.port", Required = false, HelpText = "요청을 보내는 카메라 트립 포트 번호.")]
+        public int TripPortNo
+        {
+            get;
+            set;
+        } = 11024;
 
         #endregion
 
@@ -59,6 +67,46 @@ namespace CliNet.Cores.Commands
         {
             try
             {
+                if (TryGetConfig(out GetConfigResponseInfo config) == false)
+                {
+                    return 0;
+                }
+
+                if (config.ListenPortNo != TripPortNo)
+                {
+                    using (Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp))
+                    {
+                        IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(ServerIpAddress), Port);
+                        sock.Connect(endPoint);
+                        sock.SendTimeout = Timeout;
+                        sock.ReceiveTimeout = Timeout;
+
+                        SetConfigRequestInfo requestInfo = new SetConfigRequestInfo()
+                        {
+                            SeqNo = SequenceManager.Instance.GetNext(),
+                            ListenType = config.ListenType,
+                            ListenPortNo = TripPortNo,
+                            SendType = config.SendType,
+                            SendIpAddress = config.SendIpAddress,
+                            SendPortNo = config.SendPortNo,
+                        };
+
+                        string request = JsonConvert.SerializeObject(requestInfo);
+                        NLog.LogManager.GetCurrentClassLogger().Trace($"보낸 명령:\n {request}");
+
+                        sock.Send(Encoding.ASCII.GetBytes(request), SocketFlags.None);
+
+                        byte[] receiverBuff = new byte[BUFFER_SIZE];
+                        int receivedLength = sock.Receive(receiverBuff);
+
+                        string responseString = Encoding.Default.GetString(receiverBuff, 0, receivedLength);
+                        NLog.LogManager.GetCurrentClassLogger().Trace($"받은 명령:\n {responseString}");
+
+                        // 소켓 닫기.
+                        sock.Close();
+                    }
+                }
+
                 using (Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp))
                 {
                     IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(ServerIpAddress), Port);
@@ -96,5 +144,52 @@ namespace CliNet.Cores.Commands
         }
 
         #endregion
+
+        private bool TryGetConfig(out GetConfigResponseInfo response)
+        {
+            response = null;
+
+            try
+            {
+                string responseString;
+
+                using (Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp))
+                {
+                    IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(ServerIpAddress), Port);
+                    sock.Connect(endPoint);
+                    sock.SendTimeout = Timeout;
+                    sock.ReceiveTimeout = Timeout;
+
+                    GetConfigRequestInfo requestInfo = new GetConfigRequestInfo()
+                    {
+                        SeqNo = SequenceManager.Instance.GetNext(),
+                    };
+
+                    string request = JsonConvert.SerializeObject(requestInfo);
+                    Console.WriteLine($"보낸 명령:\n {request}");
+
+                    sock.Send(Encoding.ASCII.GetBytes(request), SocketFlags.None);
+
+                    byte[] receiverBuff = new byte[BUFFER_SIZE];
+                    int receivedLength = sock.Receive(receiverBuff);
+
+                    responseString = Encoding.Default.GetString(receiverBuff, 0, receivedLength);
+                    Console.WriteLine($"받은 명령:\n {responseString}");
+
+                    // 소켓 닫기.
+                    sock.Close();
+                }
+
+                response = JsonConvert.DeserializeObject<GetConfigResponseInfo>(responseString);
+            }
+            catch (Exception ex)
+            {
+                response = null;
+
+                Console.WriteLine($"예외 발생: {ex.Message}");
+            }
+
+            return response != null;
+        }
     }
 }

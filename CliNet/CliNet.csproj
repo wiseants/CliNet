@@ -109,6 +109,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constant.cs" />
+    <Compile Include="Cores\Commands\SendMeCommand.cs" />
     <Compile Include="Cores\Commands\SetConfigCommand.cs" />
     <Compile Include="Cores\Commands\GetConfigCommand.cs" />
     <Compile Include="Cores\Commands\SendToCommand.cs" />

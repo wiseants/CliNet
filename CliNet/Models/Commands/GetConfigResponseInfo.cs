@@ -21,16 +21,6 @@ namespace CliNet.Models.Commands
         #region Properties
 
         /// <summary>
-        /// 동작 켜기/끄기
-        /// true:켜기, false:끄기.
-        /// </summary>
-        public bool IsEnable
-        {
-            get;
-            set;
-        } = false;
-
-        /// <summary>
         /// 영상 스트림 받기 타입
         /// 0:유니캐스트, 1:멀티캐스트
         /// </summary>

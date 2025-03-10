@@ -28,14 +28,14 @@ namespace CliNet.Cores.Commands
         {
             get;
             set;
-        } = IPAddressTool.LocalIpAddress;
+        } = "192.168.4.81";
 
         [Option('p', "port", Required = false, HelpText = "서버 포트 번호.")]
         public int Port
         {
             get;
             set;
-        } = 15300;
+        } = 33333;
 
         [Option('t', "timeout", Required = false, HelpText = "타임아웃 시간(ms)")]
         public int Timeout
