@@ -1,9 +1,9 @@
 ﻿using Common.Interfaces;
 using Common.Templates;
-using NLog;
 using System;
 using System.Collections.Concurrent;
 using System.Linq;
+using System.Threading;
 
 namespace CliNet.Cores.Managers
 {
@@ -22,32 +22,27 @@ namespace CliNet.Cores.Managers
             if (_threadMap.TryRemove(key, out IThreadable beforeThread))
             {
                 beforeThread.Stop();
-
-                LogManager.GetCurrentClassLogger().Info($"{key} 스레드를 제거합니다.");
             }
 
             thread.Finished += r =>
             {
-                Remove(key);
+                _ = _threadMap.TryRemove(key, out _);
+
+                Console.WriteLine($"[{key}] 스레드를 제거합니다.");
             };
             thread.Start();
 
             if (_threadMap.TryAdd(key, thread))
             {
-                LogManager.GetCurrentClassLogger().Info($"{key} 스레드를 추가합니다.");
+                Console.WriteLine($"[{key}] 스레드를 시작합니다.");
             }
         }
 
         public void Remove(string key)
         {
-            if (_threadMap.ContainsKey(key))
+            if (_threadMap.TryGetValue(key, out IThreadable thread))
             {
-                if (_threadMap.TryRemove(key, out IThreadable beforeThread))
-                {
-                    beforeThread.Stop();
-
-                    LogManager.GetCurrentClassLogger().Info($"{key} 스레드를 제거합니다.");
-                }
+                thread.Stop();
             }
             else
             {
@@ -63,6 +58,8 @@ namespace CliNet.Cores.Managers
         public void Release()
         {
             _threadMap.Keys.ToList().ForEach(x => Remove(x));
+
+            Thread.Sleep(1000);
         }
 
         #endregion
