@@ -1,19 +1,19 @@
 ﻿using Newtonsoft.Json;
 
-namespace CliNet.Models.Commands
+namespace CliNet.Models.Commands.AiModule
 {
     /// <summary>
-    /// 설정 요청 모델.
+    /// 전원 응답 모델.
     /// </summary>
     [JsonObject(MemberSerialization.OptOut)]
-    public class SetConfigRequestInfo : PacketInfo
+    public class GetConfigResponseInfo : PacketInfo
     {
         #region Constructors
 
-        public SetConfigRequestInfo()
+        public GetConfigResponseInfo()
         {
-            Type = 0;
-            Name = "SetConfig";
+            Type = 1;
+            Name = "GetConfig";
         }
 
         #endregion
@@ -28,7 +28,7 @@ namespace CliNet.Models.Commands
         {
             get;
             set;
-        }
+        } = 0;
 
         /// <summary>
         /// 영상 스트림 받기 포트 번호.
@@ -37,7 +37,7 @@ namespace CliNet.Models.Commands
         {
             get;
             set;
-        }
+        } = 0;
 
         /// <summary>
         /// 가공된 영상 스트림 보내기 타입
@@ -47,7 +47,7 @@ namespace CliNet.Models.Commands
         {
             get;
             set;
-        }
+        } = 0;
 
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace CliNet.Models.Commands
         {
             get;
             set;
-        }
+        } = "127.0.0.1";
 
         /// <summary>
         /// 가공된 영상 스트림 보내기 포트 번호.
@@ -66,7 +66,17 @@ namespace CliNet.Models.Commands
         {
             get;
             set;
-        }
+        } = 0;
+
+        /// <summary>
+        /// 반환 코드.
+        /// 0:실패, 1:성공, 2이상:에러 코드.
+        /// </summary>
+        public int ReturnCode
+        {
+            get;
+            set;
+        } = 0;
 
         #endregion
     }

@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace CliNet.Models.Commands
+namespace CliNet.Models.Commands.AiModule
 {
     /// <summary>
     /// 전원 응답 모델.

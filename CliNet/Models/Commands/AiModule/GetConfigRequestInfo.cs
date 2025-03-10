@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace CliNet.Models.Commands
+namespace CliNet.Models.Commands.AiModule
 {
     /// <summary>
     /// 설정 요청 모델.

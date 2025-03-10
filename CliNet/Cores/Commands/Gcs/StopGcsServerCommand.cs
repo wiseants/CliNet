@@ -2,7 +2,7 @@
 using CliNet.Interfaces;
 using CommandLine;
 
-namespace CliNet.Cores.Commands
+namespace CliNet.Cores.Commands.Gcs
 {
     [Verb("stop.gcs.server", HelpText = "노바코스 인터페이스 GCS 통신 서버 종료.")]
     internal class StopGcsServerCommand : IAction

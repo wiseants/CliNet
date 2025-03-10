@@ -3,7 +3,7 @@ using System;
 using System.Net.Sockets;
 using System.Text;
 
-namespace CliNet.Cores.Commands
+namespace CliNet.Cores.Commands.AiModule
 {
     [Verb("sendme", HelpText = "카메라의 영상 스트림 받기 명령.")]
     internal class SendMeCommand// : Interfaces.IAction

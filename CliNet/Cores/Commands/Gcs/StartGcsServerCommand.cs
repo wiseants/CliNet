@@ -4,7 +4,7 @@ using CliNet.Interfaces;
 using CommandLine;
 using System;
 
-namespace CliNet.Cores.Commands
+namespace CliNet.Cores.Commands.Gcs
 {
     [Verb("start.gcs.server", HelpText = "노바코스 인터페이스 GCS 통신 서버 시작.")]
     internal class StartGcsServerCommand : IAction

@@ -1,19 +1,19 @@
 ﻿using Newtonsoft.Json;
 
-namespace CliNet.Models.Commands
+namespace CliNet.Models.Commands.AiModule
 {
     /// <summary>
-    /// 나에게 보내라 요청 모델.
+    /// 전원 요청 모델.
     /// </summary>
     [JsonObject(MemberSerialization.OptOut)]
-    public class SendToRequestInfo : PacketInfo
+    public class SetEnableRequestInfo : PacketInfo
     {
         #region Constructors
 
-        public SendToRequestInfo()
+        public SetEnableRequestInfo()
         {
             Type = 0;
-            Name = "SendTo";
+            Name = "SetEnable";
         }
 
         #endregion
@@ -21,9 +21,10 @@ namespace CliNet.Models.Commands
         #region Properties
 
         /// <summary>
-        /// 가공된 영상 스트림 보내기 IP 주소.
+        /// 동작 켜기/끄기
+        /// true:켜기, false:끄기.
         /// </summary>
-        public string TripIpAddress
+        public bool IsEnable
         {
             get;
             set;

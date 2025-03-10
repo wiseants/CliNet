@@ -1,15 +1,13 @@
 ﻿using CliNet.Cores.Managers;
-using CliNet.Models.Commands;
+using CliNet.Models.Commands.AiModule;
 using CommandLine;
-using Common.Tools;
-using Nest;
 using Newtonsoft.Json;
 using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
-namespace CliNet.Cores.Commands
+namespace CliNet.Cores.Commands.AiModule
 {
     [Verb("sendto", HelpText = "카메라의 영상 스트림 받기 명령.")]
     internal class SendToCommand// : Interfaces.IAction

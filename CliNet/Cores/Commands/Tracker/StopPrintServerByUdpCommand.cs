@@ -1,7 +1,7 @@
 ﻿using CliNet.Cores.Managers;
 using CommandLine;
 
-namespace CliNet.Cores.Commands
+namespace CliNet.Cores.Commands.Tracker
 {
     [Verb("stop.print.udp", HelpText = "JSON 프린트 서버 종료.")]
     internal class StopPrintByServerCommand// : Interfaces.IAction

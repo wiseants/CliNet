@@ -9,7 +9,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 
-namespace CliNet.Cores.Commands
+namespace CliNet.Cores.Commands.Tracker
 {
     [Verb("start", HelpText = "Start to Multicast UPD Listen.")]
     public class ListenerStartCommand// : IAction

@@ -2,7 +2,7 @@
 using CliNet.Interfaces;
 using CommandLine;
 
-namespace CliNet.Cores.Commands
+namespace CliNet.Cores.Commands.Tracker
 {
     [Verb("stop", HelpText = "Stop to Multicast UPD Listen.")]
     public class ListenerStopCommand// : IAction

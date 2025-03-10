@@ -3,14 +3,14 @@ using CliNet.Cores.Managers;
 using CommandLine;
 using System;
 
-namespace CliNet.Cores.Commands
+namespace CliNet.Cores.Commands.Tracker
 {
-    [Verb("start.print", HelpText = "JSON 프린트 서버 시작.")]
-    internal class StartPrintServerCommand// : Interfaces.IAction
+    [Verb("start.print.udp", HelpText = "JSON 프린트 서버 시작.")]
+    internal class StartPrintServerByUdpCommand// : Interfaces.IAction
     {
         #region Constructors
 
-        public StartPrintServerCommand() 
+        public StartPrintServerByUdpCommand() 
         {
         }
 
@@ -39,12 +39,12 @@ namespace CliNet.Cores.Commands
                 return 0;
             }
 
-            AiModuleServer server = new AiModuleServer
+            TrackerModuleServer server = new TrackerModuleServer
             {
                 Port = Port,
             };
 
-            ThreadManager.Instance.Add("print", server);
+            ThreadManager.Instance.Add("print.udp", server);
 
             return 0;
         }

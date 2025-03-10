@@ -1,14 +1,13 @@
 ﻿using CliNet.Cores.Managers;
-using CliNet.Models.Commands;
+using CliNet.Models.Commands.AiModule;
 using CommandLine;
-using Common.Tools;
 using Newtonsoft.Json;
 using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
-namespace CliNet.Cores.Commands
+namespace CliNet.Cores.Commands.AiModule
 {
     [Verb("set.enable", HelpText = "AI 편집 활성화/비활성화 명령을 보냅니다.")]
     internal class SetEnableCommand// : Interfaces.IAction

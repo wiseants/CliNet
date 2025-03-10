@@ -1,4 +1,5 @@
 ﻿using CliNet.Models.Commands;
+using CliNet.Models.Commands.AiModule;
 using Common.Interfaces;
 using Common.Tools;
 using Newtonsoft.Json;

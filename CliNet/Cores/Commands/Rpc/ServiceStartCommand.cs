@@ -3,7 +3,7 @@ using CliNet.Interfaces;
 using CommandLine;
 using System;
 
-namespace CliNetCore.Cores.Commands
+namespace CliNetCore.Cores.Commands.Rpc
 {
     [Verb("service", HelpText = "Start service.")]
     public class ServiceStartCommand// : IAction

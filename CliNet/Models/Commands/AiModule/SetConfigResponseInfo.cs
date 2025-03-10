@@ -1,19 +1,19 @@
 ﻿using Newtonsoft.Json;
 
-namespace CliNet.Models.Commands
+namespace CliNet.Models.Commands.AiModule
 {
     /// <summary>
-    /// 나에게 보내라 응답 모델.
+    /// 전원 응답 모델.
     /// </summary>
     [JsonObject(MemberSerialization.OptOut)]
-    public class SendToResponseInfo : PacketInfo
+    public class SetConfigResponseInfo : PacketInfo
     {
         #region Constructors
 
-        public SendToResponseInfo()
+        public SetConfigResponseInfo()
         {
             Type = 1;
-            Name = "SendTo";
+            Name = "SetConfig";
         }
 
         #endregion

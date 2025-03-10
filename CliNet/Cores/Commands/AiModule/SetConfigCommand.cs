@@ -1,17 +1,16 @@
 ﻿using CliNet.Cores.Managers;
-using CliNet.Models.Commands;
+using CliNet.Models.Commands.AiModule;
 using CommandLine;
-using Common.Tools;
 using Newtonsoft.Json;
 using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
-namespace CliNet.Cores.Commands
+namespace CliNet.Cores.Commands.AiModule
 {
-    [Verb("get.config", HelpText = "전체 설정 읽기 명령을 보냅니다.")]
-    internal class GetConfigCommand// : Interfaces.IAction
+    [Verb("set.config", HelpText = "전체 설정 쓰기 명령을 보냅니다.")]
+    internal class SetConfigCommand// : Interfaces.IAction
     {
         #region Fields
 
@@ -44,6 +43,42 @@ namespace CliNet.Cores.Commands
             set;
         } = 2000;
 
+        [Option('l', "listen.type", Required = false, HelpText = "받기 스트리밍 타입. 0:유니캐스트, 1:멀티캐스트")]
+        public int ListenType
+        {
+            get;
+            set;
+        } = 0;
+
+        [Option('i', "listen.port", Required = false, HelpText = "받기 스트리밍 포트번호.")]
+        public int ListenPortNo
+        {
+            get;
+            set;
+        } = 0;
+
+        [Option('s', "send.type", Required = false, HelpText = "보내기 스트리밍 타입. 0:유니캐스트, 1:멀티캐스트")]
+        public int SendType
+        {
+            get;
+            set;
+        } = 0;
+
+
+        [Option('n', "send.ip", Required = false, HelpText = "보내기 스트리밍 IP 주소.")]
+        public string SendIpAddress
+        {
+            get;
+            set;
+        } = "127.0.0.1";
+
+        [Option('d', "send.port", Required = false, HelpText = "보내기 스트리밍 포트번호.")]
+        public int SendPortNo
+        {
+            get;
+            set;
+        } = 0;
+
         #endregion
 
         #region Public methods
@@ -59,9 +94,14 @@ namespace CliNet.Cores.Commands
                     sock.SendTimeout = Timeout;
                     sock.ReceiveTimeout = Timeout;
 
-                    GetConfigRequestInfo requestInfo = new GetConfigRequestInfo()
+                    SetConfigRequestInfo requestInfo = new SetConfigRequestInfo()
                     {
                         SeqNo = SequenceManager.Instance.GetNext(),
+                        ListenType = ListenType,
+                        ListenPortNo = ListenPortNo,
+                        SendType = SendType,
+                        SendIpAddress = SendIpAddress,
+                        SendPortNo = SendPortNo,
                     };
 
                     string request = JsonConvert.SerializeObject(requestInfo);
