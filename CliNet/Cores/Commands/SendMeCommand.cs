@@ -6,7 +6,7 @@ using System.Text;
 namespace CliNet.Cores.Commands
 {
     [Verb("sendme", HelpText = "카메라의 영상 스트림 받기 명령.")]
-    internal class SendMeCommand : Interfaces.IAction
+    internal class SendMeCommand// : Interfaces.IAction
     {
         #region Fields
 
@@ -16,7 +16,7 @@ namespace CliNet.Cores.Commands
 
         #region Properties
 
-        public bool IsValid => true;
+        public bool IsValid => false;
 
 
         [Option('r', "trip.address", Required = false, HelpText = "요청을 보내는 카메라 트립 IP 주소.")]

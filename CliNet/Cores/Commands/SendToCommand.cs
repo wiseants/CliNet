@@ -12,7 +12,7 @@ using System.Text;
 namespace CliNet.Cores.Commands
 {
     [Verb("sendto", HelpText = "카메라의 영상 스트림 받기 명령.")]
-    internal class SendToCommand : Interfaces.IAction
+    internal class SendToCommand// : Interfaces.IAction
     {
         #region Fields
 
@@ -22,7 +22,7 @@ namespace CliNet.Cores.Commands
 
         #region Properties
 
-        public bool IsValid => true;
+        public bool IsValid => false;
 
         [Option('a', "address", Required = false, HelpText = "서버 IP 주소.")]
         public string ServerIpAddress

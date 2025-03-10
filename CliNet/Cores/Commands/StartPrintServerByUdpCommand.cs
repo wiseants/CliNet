@@ -6,7 +6,7 @@ using System;
 namespace CliNet.Cores.Commands
 {
     [Verb("start.print.udp", HelpText = "JSON 프린트 서버 시작.")]
-    internal class StartPrintServerByUdpCommand : Interfaces.IAction
+    internal class StartPrintServerByUdpCommand// : Interfaces.IAction
     {
         #region Constructors
 
@@ -18,7 +18,7 @@ namespace CliNet.Cores.Commands
 
         #region Properties
 
-        public bool IsValid => true;
+        public bool IsValid => false;
 
         [Option('p', "port", Required = false, HelpText = "서버 포트 번호.")]
         public int Port

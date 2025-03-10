@@ -4,7 +4,7 @@ using CommandLine;
 namespace CliNet.Cores.Commands
 {
     [Verb("stop.print", HelpText = "JSON 프린트 서버 종료.")]
-    internal class StopPrintServerCommand : Interfaces.IAction
+    internal class StopPrintServerCommand// : Interfaces.IAction
     {
         #region Constructors
 
@@ -16,7 +16,7 @@ namespace CliNet.Cores.Commands
 
         #region Properties
 
-        public bool IsValid => true;
+        public bool IsValid => false;
 
         #endregion
 

@@ -5,9 +5,9 @@ using System;
 namespace CliNet.Cores.Commands
 {
     [Verb("open", HelpText = "Convert file.")]
-    public class OpenSerialCommand : IAction
+    public class OpenSerialCommand// : IAction
     {
-        public bool IsValid => throw new NotImplementedException();
+        public bool IsValid => false;
 
         public int Action()
         {

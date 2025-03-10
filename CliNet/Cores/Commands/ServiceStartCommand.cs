@@ -6,11 +6,11 @@ using System;
 namespace CliNetCore.Cores.Commands
 {
     [Verb("service", HelpText = "Start service.")]
-    public class ServiceStartCommand : IAction
+    public class ServiceStartCommand// : IAction
     {
         #region Properties
 
-        public bool IsValid => true;
+        public bool IsValid => false;
 
         [Option('p', "port", Required = true, HelpText = "Service port number.")]
         public int Port { get; set; }

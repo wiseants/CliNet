@@ -11,7 +11,7 @@ using System.Text;
 namespace CliNet.Cores.Commands
 {
     [Verb("set.enable", HelpText = "AI 편집 활성화/비활성화 명령을 보냅니다.")]
-    internal class SetEnableCommand : Interfaces.IAction
+    internal class SetEnableCommand// : Interfaces.IAction
     {
         #region Fields
 
@@ -21,7 +21,7 @@ namespace CliNet.Cores.Commands
 
         #region Properties
 
-        public bool IsValid => true;
+        public bool IsValid => false;
 
         [Option('a', "address", Required = false, HelpText = "서버 IP 주소.")]
         public string ServerIpAddress

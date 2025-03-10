@@ -12,11 +12,11 @@ using System.Net.Sockets;
 namespace CliNet.Cores.Commands
 {
     [Verb("start", HelpText = "Start to Multicast UPD Listen.")]
-    public class ListenerStartCommand : IAction
+    public class ListenerStartCommand// : IAction
     {
         #region Properties
 
-        public bool IsValid => true;
+        public bool IsValid => false;
 
         [Option('i', "identifier", Required = false, HelpText = "Listener Identifier")]
         public string Key
