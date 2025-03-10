@@ -35,12 +35,14 @@ namespace CliNet.Cores.Implementations
             { "SetEnable", RunSetEnable },
             { "GetConfig", RunGetConfig },
             { "SetConfig", RunSetConfig },
+            { "SendTo", RunSendTo },
         };
         private readonly Dictionary<string, Func<PacketInfo, object>> RESPONSE_BUILDER_MAP = new Dictionary<string, Func<PacketInfo, object>>()
         {
             { "SetEnable", BuildSetEnableResponse },
             { "GetConfig", BuildGetConfigResponse },
             { "SetConfig", BuildSetConfigResponse },
+            { "SendTo", BuildSendToResponse },
         };
 
         private readonly Thread _thread;
@@ -186,6 +188,19 @@ namespace CliNet.Cores.Implementations
         }
 
         /// <summary>
+        /// SendTo 요청 메소드.
+        /// </summary>
+        /// <param name="request"></param>
+        private static void RunSendTo(string request)
+        {
+            SendToRequestInfo requestInfo = JsonConvert.DeserializeObject<SendToRequestInfo>(request);
+            if (requestInfo != null)
+            {
+                Console.WriteLine($"트립[{requestInfo.TripIpAddress}]은 [나에게 보내라] 명령 수행.");
+            }
+        }
+
+        /// <summary>
         /// SetEnable 응답 모델 빌더.
         /// </summary>
         /// <param name="request">요청 패킷.</param>
@@ -211,7 +226,7 @@ namespace CliNet.Cores.Implementations
             GetConfigResponseInfo result = new GetConfigResponseInfo()
             {
                 SeqNo = request.SeqNo,
-                IsEnable = Convert.ToBoolean(AppConfiguration.GetAppConfig(IS_ENALBE_KEY)),
+                //IsEnable = Convert.ToBoolean(AppConfiguration.GetAppConfig(IS_ENALBE_KEY)),
                 ListenType = Convert.ToInt32(AppConfiguration.GetAppConfig(LISTEN_TYPE)),
                 ListenPortNo = Convert.ToInt32(AppConfiguration.GetAppConfig(LISTEN_PORT_NO)),
                 SendType = Convert.ToInt32(AppConfiguration.GetAppConfig(SEND_TYPE)),
@@ -231,6 +246,23 @@ namespace CliNet.Cores.Implementations
         private static object BuildSetConfigResponse(PacketInfo request)
         {
             SetConfigResponseInfo result = new SetConfigResponseInfo()
+            {
+                SeqNo = request.SeqNo,
+                ReturnCode = 1,
+            };
+
+            return result;
+        }
+
+
+        /// <summary>
+        /// SendTo 응답 모델 빌더.
+        /// </summary>
+        /// <param name="request">요청 패킷.</param>
+        /// <returns>응답 객체.</returns>
+        private static object BuildSendToResponse(PacketInfo request)
+        {
+            SendToResponseInfo result = new SendToResponseInfo()
             {
                 SeqNo = request.SeqNo,
                 ReturnCode = 1,
