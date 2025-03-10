@@ -1,15 +1,51 @@
-﻿using Common.Templates;
+﻿using CliNet.Models.Commands;
+using CliNet.Models.Commands.AiModule;
+using Common.Templates;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Unity;
 
 namespace CliNet.Cores.Services
 {
-    public class ContainerService : Singleton<ContainerService>
+    public class ContainerService : Singleton<ContainerService>, IDisposable
     {
         #region Fields
+
+        private readonly UnityContainer _container = new UnityContainer();
+
+        #endregion
+
+        #region Constructors
+
+        public ContainerService()
+        {
+            _container.RegisterType<PacketInfo, GetServerStateInfo>("GetServerState");
+
+            _container.RegisterType<PacketInfo, ServerStateInfo>("ServerState");
+        }
+
+        #endregion
+
+        #region Public methods
+
+        public T Resolve<T>(string keyword)
+        {
+            return _container.Resolve<T>(keyword);
+        }
+
+        public static void Release()
+        {
+            Instance.Dispose();
+        }
+
+        #endregion
+
+
+        #region IDisposable implementations
+
+        public void Dispose()
+        {
+            _container.Dispose();
+        }
 
         #endregion
     }
