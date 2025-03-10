@@ -12,7 +12,6 @@ namespace CliNet.Models.Commands.AiModule
 
         public SendToRequestInfo()
         {
-            Type = 0;
             Name = "SendTo";
         }
 

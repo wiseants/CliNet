@@ -12,7 +12,6 @@ namespace CliNet.Models.Commands.AiModule
 
         public SetEnableResponseInfo()
         {
-            Type = 1;
             Name = "SetEnable";
         }
 

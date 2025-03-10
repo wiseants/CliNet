@@ -1,5 +1,8 @@
-﻿using Common.Interfaces;
+﻿using CliNet.Models.Commands;
+using CliNet.Models.Commands.AiModule;
+using Common.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -13,7 +16,7 @@ namespace CliNet.Cores.Implementations
         #region Events
 
         public event Action<int> Finished;
-        public event Action<string> ReceivedData;
+        public event Action<string> OccuredMessage;
 
         #endregion
 
@@ -101,9 +104,8 @@ namespace CliNet.Cores.Implementations
 
                         NetworkStream stream = client.GetStream();
 
-                        token.Register(client.Close); // THIS IS IMPORTANT!
+                        token.Register(client.Close);
 
-                        // Checks CanRead to verify that the NetworkStream is readable. 
                         if (stream.CanRead)
                         {
                             int receivedLength;
@@ -113,7 +115,7 @@ namespace CliNet.Cores.Implementations
                             {
                                 receivedData = Encoding.ASCII.GetString(buffer, 0, receivedLength);
 
-                                ReceivedData?.Invoke(receivedData);
+                                OccuredMessage?.Invoke(receivedData);
                             }
                             client.Close();
                         }

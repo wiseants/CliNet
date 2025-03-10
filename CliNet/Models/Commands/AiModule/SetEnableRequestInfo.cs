@@ -12,7 +12,6 @@ namespace CliNet.Models.Commands.AiModule
 
         public SetEnableRequestInfo()
         {
-            Type = 0;
             Name = "SetEnable";
         }
 

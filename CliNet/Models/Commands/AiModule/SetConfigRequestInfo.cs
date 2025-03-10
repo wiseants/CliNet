@@ -12,7 +12,6 @@ namespace CliNet.Models.Commands.AiModule
 
         public SetConfigRequestInfo()
         {
-            Type = 0;
             Name = "SetConfig";
         }
 

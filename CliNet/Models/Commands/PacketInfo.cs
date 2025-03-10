@@ -13,16 +13,6 @@ namespace CliNet.Models.Commands
         #region Properties
 
         /// <summary>
-        /// 명령 타입.
-        /// 0:요청, 1:응답.
-        /// </summary>
-        public int Type
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
         /// 명령 이름.
         /// 명령에 대한 식별자로 사용.
         /// </summary>
@@ -48,7 +38,7 @@ namespace CliNet.Models.Commands
 
         public override bool Equals(object obj)
         {
-            return (obj is ComInfo rate) && Name.Equals(rate.Name, StringComparison.CurrentCultureIgnoreCase);
+            return (obj is PacketInfo packet) && Name.Equals(packet.Name, StringComparison.CurrentCultureIgnoreCase);
         }
 
         public override int GetHashCode()

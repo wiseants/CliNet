@@ -3,16 +3,16 @@
 namespace CliNet.Models.Commands.AiModule
 {
     /// <summary>
-    /// 설정 요청 모델.
+    /// 서버 상태 요청 모델.
     /// </summary>
     [JsonObject(MemberSerialization.OptOut)]
-    public class GetConfigRequestInfo : PacketInfo
+    public class GetServerStateInfo : PacketInfo
     {
         #region Constructors
 
-        public GetConfigRequestInfo()
+        public GetServerStateInfo()
         {
-            Name = "GetConfig";
+            Name = "GetServerState";
         }
 
         #endregion

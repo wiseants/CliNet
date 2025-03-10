@@ -12,7 +12,6 @@ namespace CliNet.Models.Commands.AiModule
 
         public GetConfigResponseInfo()
         {
-            Type = 1;
             Name = "GetConfig";
         }
 

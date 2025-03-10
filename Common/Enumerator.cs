@@ -26,9 +26,24 @@ namespace Common
         PUT
     }
 
+    /// <summary>
+    /// 프로토콜 타입.
+    /// </summary>
     public enum ProtocolType
     {
         UDP,
         COM,
+    }
+
+    /// <summary>
+    /// GCS 상태 타입.
+    /// </summary>
+    public enum GcsState
+    {
+        Idle = 0,
+        Initialized = 1,
+        Connecting = 2,
+        Disarm = 3,
+        Arm = 4
     }
 }

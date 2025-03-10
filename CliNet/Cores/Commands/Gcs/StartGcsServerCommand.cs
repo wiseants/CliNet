@@ -58,7 +58,7 @@ namespace CliNet.Cores.Commands.Gcs
                 IpAddress = IpAddress,
                 Port = Port,
             };
-            server.ReceivedData += (x) => Console.WriteLine(x);
+            server.OccuredMessage += (x) => Console.WriteLine(x);
 
             ThreadManager.Instance.Add(SERVER_NAME, server);
 

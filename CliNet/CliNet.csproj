@@ -109,6 +109,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constant.cs" />
+    <Compile Include="Cores\Commands\Gcs\GetServerStateCommand.cs" />
     <Compile Include="Cores\Commands\Tracker\ListenerStartCommand.cs" />
     <Compile Include="Cores\Commands\Tracker\ListenerStopCommand.cs" />
     <Compile Include="Cores\Commands\AiModule\SendMeCommand.cs" />
@@ -132,12 +133,16 @@
     <Compile Include="Cores\Managers\RpcServiceManager.cs" />
     <Compile Include="Cores\Managers\SequenceManager.cs" />
     <Compile Include="Cores\Managers\ThreadManager.cs" />
+    <Compile Include="Cores\Services\ContainerService.cs" />
     <Compile Include="Cores\Services\ExampleService.cs" />
     <Compile Include="Interfaces\IAction.cs" />
     <Compile Include="Models\AsyncObject.cs" />
     <Compile Include="Models\Commands\AiModule\SendToRequestInfo.cs" />
     <Compile Include="Models\Commands\AiModule\SetConfigResponseInfo.cs" />
     <Compile Include="Models\Commands\AiModule\SetConfigRequestInfo.cs" />
+    <Compile Include="Models\Commands\Gcs\ServerStateInfo.cs" />
+    <Compile Include="Models\Commands\Gcs\GetServerStateInfo.cs" />
+    <Compile Include="Models\Commands\ResponsePacketInfo.cs" />
     <Compile Include="Models\Commands\PacketInfo.cs" />
     <Compile Include="Models\Commands\AiModule\GetConfigRequestInfo.cs" />
     <Compile Include="Models\Commands\AiModule\GetConfigResponseInfo.cs" />
