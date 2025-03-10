@@ -1,8 +1,12 @@
-﻿using CliNet.Models.Commands;
+﻿using CliNet.Cores.Services;
+using CliNet.Models.Commands;
 using CliNet.Models.Commands.AiModule;
 using Common.Interfaces;
+using Nest;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -115,6 +119,8 @@ namespace CliNet.Cores.Implementations
                             {
                                 receivedData = Encoding.ASCII.GetString(buffer, 0, receivedLength);
 
+                                ParsePacket(receivedData);
+
                                 OccuredMessage?.Invoke(receivedData);
                             }
                             client.Close();
@@ -131,6 +137,17 @@ namespace CliNet.Cores.Implementations
             }
 
             Finished?.Invoke(0);
+        }
+
+        private void ParsePacket(string buffer)
+        {
+            PacketInfo receivedPacket = JsonConvert.DeserializeObject<PacketInfo>(buffer);
+            if (receivedPacket != null)
+            {
+                if (ContainerService.Instance.TryResolveType(receivedPacket.Name, out Type type))
+                {
+                }
+            }
         }
 
         #endregion

@@ -32,6 +32,19 @@ namespace CliNet.Cores.Services
             return _container.Resolve<T>(keyword);
         }
 
+        public bool TryResolveType(string keyword, out Type type)
+        {
+            type = null;
+
+            try
+            {
+                type = Resolve<PacketInfo>(keyword).GetType();
+            }
+            catch { }
+
+            return type != null;
+        }
+
         public static void Release()
         {
             Instance.Dispose();
