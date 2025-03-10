@@ -32,13 +32,13 @@ namespace CliNet.Cores.Services
             return _container.Resolve<T>(keyword);
         }
 
-        public bool TryResolveType(string keyword, out Type type)
+        public bool TryResolveType<T>(string keyword, out Type type)
         {
             type = null;
 
             try
             {
-                type = Resolve<PacketInfo>(keyword).GetType();
+                type = Resolve<T>(keyword).GetType();
             }
             catch { }
 

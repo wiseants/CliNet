@@ -1,6 +1,7 @@
 ﻿using CliNet.Cores.Implementations;
 using CliNet.Cores.Managers;
 using CliNet.Interfaces;
+using CliNet.Models.Commands.AiModule;
 using CommandLine;
 using System;
 
@@ -58,7 +59,12 @@ namespace CliNet.Cores.Commands.Gcs
                 IpAddress = IpAddress,
                 Port = Port,
             };
-            server.OccuredMessage += (x) => Console.WriteLine(x);
+            server.Request += (x) =>
+            {
+                Console.WriteLine(x);
+
+                return new ServerStateInfo();
+            };
 
             ThreadManager.Instance.Add(SERVER_NAME, server);
 

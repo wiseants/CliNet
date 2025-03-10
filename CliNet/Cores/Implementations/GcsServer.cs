@@ -20,7 +20,7 @@ namespace CliNet.Cores.Implementations
         #region Events
 
         public event Action<int> Finished;
-        public event Action<string> OccuredMessage;
+        public event Func<object, object> Request;
 
         #endregion
 
@@ -100,34 +100,12 @@ namespace CliNet.Cores.Implementations
 
                 while (token.IsCancellationRequested == false)
                 {
-                    TcpClient client = listener.AcceptTcpClient();
-
-                    _ = Task.Run(() =>
+                    using(TcpClient client = listener.AcceptTcpClient())
                     {
-                        byte[] buffer = new byte[BUFFER_SIZE];
+                        ListenAndResponse(client, token);
 
-                        NetworkStream stream = client.GetStream();
-
-                        token.Register(client.Close);
-
-                        if (stream.CanRead)
-                        {
-                            int receivedLength;
-                            string receivedData = string.Empty;
-
-                            while ((receivedLength = stream.Read(buffer, 0, buffer.Length)) != 0 && token.IsCancellationRequested == false)
-                            {
-                                receivedData = Encoding.ASCII.GetString(buffer, 0, receivedLength);
-
-                                ParsePacket(receivedData);
-
-                                OccuredMessage?.Invoke(receivedData);
-                            }
-                            client.Close();
-                        }
-
-                        return Task.CompletedTask;
-                    }, token);
+                        client.Close();
+                    }
                 }
             }
             catch (SocketException) { }
@@ -139,13 +117,51 @@ namespace CliNet.Cores.Implementations
             Finished?.Invoke(0);
         }
 
-        private void ParsePacket(string buffer)
+        private object ParsePacket(string buffer)
         {
+            object receivedObject = null;
+
             PacketInfo receivedPacket = JsonConvert.DeserializeObject<PacketInfo>(buffer);
             if (receivedPacket != null)
             {
-                if (ContainerService.Instance.TryResolveType(receivedPacket.Name, out Type type))
+                if (ContainerService.Instance.TryResolveType<PacketInfo>(receivedPacket.Name, out Type type))
                 {
+                    receivedObject = JsonConvert.DeserializeObject(buffer, type);
+                }
+            }
+
+            return receivedObject;
+        }
+
+        private void ListenAndResponse(TcpClient client, CancellationToken token)
+        {
+            token.Register(client.Close);
+
+            using (NetworkStream stream = client.GetStream())
+            {
+                if (stream.CanRead == false)
+                {
+                    return;
+                }
+
+                byte[] buffer = new byte[BUFFER_SIZE];
+                int receivedLength;
+                string receivedData = string.Empty;
+
+                while ((receivedLength = stream.Read(buffer, 0, buffer.Length)) != 0 && token.IsCancellationRequested == false)
+                {
+                    receivedData = Encoding.ASCII.GetString(buffer, 0, receivedLength);
+                }
+
+                object request = ParsePacket(receivedData);
+                if (request != null)
+                {
+                    object response = Request?.Invoke(request);
+                    if (response != null)
+                    {
+                        byte[] sendBytes = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(response));
+                        client.Client.Send(sendBytes, sendBytes.Length, SocketFlags.None);
+                    }
                 }
             }
         }
