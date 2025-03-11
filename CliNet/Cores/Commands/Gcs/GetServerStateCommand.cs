@@ -60,21 +60,7 @@ namespace CliNet.Cores.Commands.Gcs
             {
                 using (TcpClient client = new TcpClient(IpAddress, Port))
                 {
-                    NetworkStream stream = client.GetStream();
-
-                    GetServerStateInfo requestInfo = new GetServerStateInfo();
-
-                    string request = JsonConvert.SerializeObject(requestInfo);
-                    Console.WriteLine($"보낸 명령:\n {request}");
-
-                    byte[] sendBuffer = Encoding.Default.GetBytes(request);
-                    stream.Write(sendBuffer, 0, sendBuffer.Length);
-
-                    byte[] receivedBuffer = new byte[BUFFER_SIZE];
-
-                    int receivedLength = stream.Read(receivedBuffer, 0, receivedBuffer.Length);
-                    string receivedMessage = Encoding.Default.GetString(receivedBuffer, 0, receivedLength);
-                    Console.WriteLine($"받은 명령:\n {receivedMessage}");
+                    RequestAndListen(client);
                 }
             }
             catch (Exception ex)
@@ -83,6 +69,30 @@ namespace CliNet.Cores.Commands.Gcs
             }
 
             return 0;
+        }
+
+        #endregion
+
+        #region Private methods
+
+        private void RequestAndListen(TcpClient client)
+        {
+            using (NetworkStream stream = client.GetStream())
+            {
+                GetServerStateInfo requestInfo = new GetServerStateInfo();
+
+                string requestString = JsonConvert.SerializeObject(requestInfo);
+                Console.WriteLine($"서버로 보내는 요청:\n {requestString}");
+
+                byte[] sendBuffer = Encoding.Default.GetBytes(requestString);
+                stream.Write(sendBuffer, 0, sendBuffer.Length);
+
+                byte[] receivedBuffer = new byte[BUFFER_SIZE];
+                int receivedLength = stream.Read(receivedBuffer, 0, receivedBuffer.Length);
+
+                string responseString = Encoding.Default.GetString(receivedBuffer, 0, receivedLength);
+                Console.WriteLine($"서버로부터 받은 응답:\n {responseString}");
+            }
         }
 
         #endregion
