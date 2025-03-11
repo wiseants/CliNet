@@ -20,6 +20,9 @@ namespace CliNet.Models.Commands.AiModule
 
         #region Properties
 
+        /// <summary>
+        /// GCS 상태.
+        /// </summary>
         public GcsState State
         {
             get;

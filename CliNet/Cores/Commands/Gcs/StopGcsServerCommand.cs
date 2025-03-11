@@ -4,7 +4,7 @@ using CommandLine;
 
 namespace CliNet.Cores.Commands.Gcs
 {
-    [Verb("stop.gcs.server", HelpText = "노바코스 인터페이스 GCS 통신 서버 종료.")]
+    [Verb("stop.server", HelpText = "노바코스 인터페이스 GCS 통신 서버 종료.")]
     internal class StopGcsServerCommand : IAction
     {
         #region Constructors

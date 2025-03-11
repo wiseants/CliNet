@@ -8,8 +8,8 @@ using System.Text;
 
 namespace CliNet.Cores.Commands.Gcs
 {
-    [Verb("get.state", HelpText = "GCS 상태 정보 요청.")]
-    internal class GetServerStateCommand : IAction
+    [Verb("set.goal", HelpText = "목표 위치 정보 전송.")]
+    internal class SetGoalCommand : IAction
     {
         #region Fields
 
@@ -19,7 +19,7 @@ namespace CliNet.Cores.Commands.Gcs
 
         #region Constructors
 
-        public GetServerStateCommand() 
+        public SetGoalCommand() 
         {
         }
 
@@ -79,7 +79,7 @@ namespace CliNet.Cores.Commands.Gcs
         {
             using (NetworkStream stream = client.GetStream())
             {
-                GetServerStateInfo requestInfo = new GetServerStateInfo();
+                SetGoalInfo requestInfo = new SetGoalInfo();
 
                 string requestString = JsonConvert.SerializeObject(requestInfo);
                 Console.WriteLine($"서버로 보내는 요청:\n {requestString}");

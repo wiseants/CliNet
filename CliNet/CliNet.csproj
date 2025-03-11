@@ -115,6 +115,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constant.cs" />
+    <Compile Include="Cores\Commands\Gcs\SetGoalCommand.cs" />
+    <Compile Include="Cores\Commands\Gcs\GetVehicleStatusCommand.cs" />
     <Compile Include="Cores\Commands\Gcs\GetServerStateCommand.cs" />
     <Compile Include="Cores\Commands\Tracker\ListenerStartCommand.cs" />
     <Compile Include="Cores\Commands\Tracker\ListenerStopCommand.cs" />
@@ -146,6 +148,9 @@
     <Compile Include="Models\Commands\AiModule\SendToRequestInfo.cs" />
     <Compile Include="Models\Commands\AiModule\SetConfigResponseInfo.cs" />
     <Compile Include="Models\Commands\AiModule\SetConfigRequestInfo.cs" />
+    <Compile Include="Models\Commands\Gcs\SetGoalInfo.cs" />
+    <Compile Include="Models\Commands\Gcs\VehicleStatusInfo.cs" />
+    <Compile Include="Models\Commands\Gcs\GetVehicleStatusInfo.cs" />
     <Compile Include="Models\Commands\Gcs\ServerStateInfo.cs" />
     <Compile Include="Models\Commands\Gcs\GetServerStateInfo.cs" />
     <Compile Include="Models\Commands\ResponsePacketInfo.cs" />
