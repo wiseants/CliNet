@@ -36,7 +36,7 @@ namespace CliNet.Cores.Commands.Gcs
             set;
         } = "127.0.0.1";
 
-        [Option('p', "port", Required = false, HelpText = "서버 포트 번호.")]
+        [Option('p', "port", Required = false, HelpText = "로컬 서버 포트 번호.")]
         public int Port
         {
             get;
