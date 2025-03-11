@@ -6,7 +6,7 @@ namespace CliNet.Models.Commands.AiModule
     /// 기체 스테이터스 모델.
     /// </summary>
     [JsonObject(MemberSerialization.OptOut)]
-    public class VehicleStatusInfo : PacketInfo
+    public class VehicleStatusInfo : ResponsePacketInfo
     {
         #region Constructors
 
@@ -16,7 +16,6 @@ namespace CliNet.Models.Commands.AiModule
         }
 
         #endregion
-
 
         #region Properties
 

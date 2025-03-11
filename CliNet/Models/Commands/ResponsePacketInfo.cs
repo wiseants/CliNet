@@ -10,6 +10,14 @@ namespace CliNet.Models.Commands
     [JsonObject(MemberSerialization.OptOut)]
     public class ResponsePacketInfo : PacketInfo
     {
+        #region Constructors
+
+        public ResponsePacketInfo() : base()
+        {
+            Name = "Response";
+        }
+
+        #endregion
         #region Properties
 
         /// <summary>

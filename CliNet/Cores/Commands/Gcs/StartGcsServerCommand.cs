@@ -1,9 +1,9 @@
 ﻿using CliNet.Cores.Implementations;
 using CliNet.Cores.Managers;
 using CliNet.Interfaces;
+using CliNet.Models.Commands;
 using CliNet.Models.Commands.AiModule;
 using CommandLine;
-using Newtonsoft.Json;
 using System;
 
 namespace CliNet.Cores.Commands.Gcs
@@ -62,12 +62,59 @@ namespace CliNet.Cores.Commands.Gcs
             };
             server.Request += (x) =>
             {
-                return new ServerStateInfo();
+                object result = null;
+
+                try
+                {
+                    if (x is GetServerStateInfo getServerState)
+                    {
+                        result = BuildServerState();
+                    }
+                    else if (x is GetVehicleStatusInfo getVehicleStatus)
+                    {
+                        result = BuildVehicleStatus();
+                    }
+                    else if (x is SetGoalInfo setGoal)
+                    {
+                        result = BuildResponsePacket();
+                    }
+                }
+                catch { }
+
+                return result;
             };
 
             ThreadManager.Instance.Add(SERVER_NAME, server);
 
             return 0;
+        }
+
+        #endregion
+
+        #region Private methods
+
+        private ServerStateInfo BuildServerState()
+        {
+            return new ServerStateInfo()
+            {
+                ResultCode = 1
+            };
+        }
+
+        private VehicleStatusInfo BuildVehicleStatus()
+        {
+            return new VehicleStatusInfo()
+            {
+                ResultCode = 1
+            };
+        }
+
+        private ResponsePacketInfo BuildResponsePacket()
+        {
+            return new ResponsePacketInfo()
+            {
+                ResultCode = 1
+            };
         }
 
         #endregion

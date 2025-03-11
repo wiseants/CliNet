@@ -19,8 +19,12 @@ namespace CliNet.Cores.Services
         public ContainerService()
         {
             _container.RegisterType<PacketInfo, GetServerStateInfo>("GetServerState");
+            _container.RegisterType<PacketInfo, GetVehicleStatusInfo>("GetVehicleStatus");
+            _container.RegisterType<PacketInfo, SetGoalInfo>("SetGoal");
 
             _container.RegisterType<PacketInfo, ServerStateInfo>("ServerState");
+            _container.RegisterType<PacketInfo, VehicleStatusInfo>("VehicleStatus");
+            _container.RegisterType<PacketInfo, ResponsePacketInfo>("Response");
         }
 
         #endregion

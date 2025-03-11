@@ -148,15 +148,16 @@ namespace CliNet.Cores.Implementations
                 object request = ParsePacket(requestString);
                 if (request != null)
                 {
-                    object response = Request?.Invoke(request);
-                    if (response != null)
+                    object response = (Request?.Invoke(request)) ?? new ResponsePacketInfo()
                     {
-                        string responseString = JsonConvert.SerializeObject(response);
-                        Console.WriteLine($"클라이언트로 보내는 응답:\n {responseString}");
+                        ResultCode = 0
+                    };
 
-                        byte[] sendBuffer = Encoding.Default.GetBytes(responseString);
-                        stream.Write(sendBuffer, 0, sendBuffer.Length);
-                    }
+                    string responseString = JsonConvert.SerializeObject(response);
+                    Console.WriteLine($"클라이언트로 보내는 응답:\n {responseString}");
+
+                    byte[] sendBuffer = Encoding.Default.GetBytes(responseString);
+                    stream.Write(sendBuffer, 0, sendBuffer.Length);
                 }
             }
         }
