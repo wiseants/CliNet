@@ -1,15 +1,10 @@
-﻿using CliNet.Cores.Implementations;
-using CliNet.Cores.Managers;
-using CliNet.Interfaces;
+﻿using CliNet.Interfaces;
 using CliNet.Models.Commands.AiModule;
 using CommandLine;
 using Newtonsoft.Json;
 using System;
 using System.Net.Sockets;
-using System.Net;
 using System.Text;
-using System.Threading;
-using Grpc.Core;
 
 namespace CliNet.Cores.Commands.Gcs
 {
@@ -66,18 +61,19 @@ namespace CliNet.Cores.Commands.Gcs
                 using (TcpClient client = new TcpClient(IpAddress, Port))
                 {
                     NetworkStream stream = client.GetStream();
-                    byte[] buffer = new byte[BUFFER_SIZE];
 
                     GetServerStateInfo requestInfo = new GetServerStateInfo();
 
                     string request = JsonConvert.SerializeObject(requestInfo);
                     Console.WriteLine($"보낸 명령:\n {request}");
 
-                    byte[] dataArray = Encoding.UTF8.GetBytes(request);
-                    stream.Write(dataArray, 0, dataArray.Length);
+                    byte[] sendBuffer = Encoding.Default.GetBytes(request);
+                    stream.Write(sendBuffer, 0, sendBuffer.Length);
 
-                    int bytesRead = stream.Read(buffer, 0, buffer.Length);
-                    string receivedMessage = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+                    byte[] receivedBuffer = new byte[BUFFER_SIZE];
+
+                    int receivedLength = stream.Read(receivedBuffer, 0, receivedBuffer.Length);
+                    string receivedMessage = Encoding.Default.GetString(receivedBuffer, 0, receivedLength);
                     Console.WriteLine($"받은 명령:\n {receivedMessage}");
                 }
             }
