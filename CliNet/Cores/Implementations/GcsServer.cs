@@ -154,7 +154,7 @@ namespace CliNet.Cores.Implementations
                         if (response != null)
                         {
                             string responseString = JsonConvert.SerializeObject(response);
-                            Console.WriteLine($"클라이언트로 보내는 응답:\n {requestString}");
+                            Console.WriteLine($"클라이언트로 보내는 응답:\n {responseString}");
 
                             byte[] sendBuffer = Encoding.Default.GetBytes(responseString);
                             stream.Write(sendBuffer, 0, sendBuffer.Length);
