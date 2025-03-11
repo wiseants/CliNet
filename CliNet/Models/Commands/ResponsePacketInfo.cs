@@ -1,6 +1,4 @@
-﻿using Common.Models;
-using Newtonsoft.Json;
-using System;
+﻿using Newtonsoft.Json;
 
 namespace CliNet.Models.Commands
 {
@@ -18,6 +16,7 @@ namespace CliNet.Models.Commands
         }
 
         #endregion
+
         #region Properties
 
         /// <summary>

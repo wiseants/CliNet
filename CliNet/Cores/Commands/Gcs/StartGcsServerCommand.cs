@@ -97,6 +97,7 @@ namespace CliNet.Cores.Commands.Gcs
         {
             return new ServerStateInfo()
             {
+                State = Common.GcsState.Disarm,
                 ResultCode = 1
             };
         }
@@ -105,6 +106,24 @@ namespace CliNet.Cores.Commands.Gcs
         {
             return new VehicleStatusInfo()
             {
+                Role = 1.6F,
+                Pitch = 2.4F,
+                Latitude = 37.293153,
+                Longitude = 126.813816,
+                Altitude = 0.2F,
+                Head = 42.6F,
+                GroundCourse = 48.0F,
+                TargetBearing = 114.9F,
+                AirSpeed = 0.1F,
+                GroundSpeed = 0.0F,
+                BatteryRemaining = 100,
+                LinkQualityGcs = 99,
+                VibeX = 0.0001F,
+                VibeY = 0.00001F,
+                VibeZ = 0.000001F,
+                TargetLatitude = 37.27876,
+                TargetLongitude = 126.788549,
+                SlantRange = 1523,
                 ResultCode = 1
             };
         }
