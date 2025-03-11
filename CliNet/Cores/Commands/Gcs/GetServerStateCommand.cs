@@ -9,6 +9,7 @@ using System.Net.Sockets;
 using System.Net;
 using System.Text;
 using System.Threading;
+using Grpc.Core;
 
 namespace CliNet.Cores.Commands.Gcs
 {
@@ -62,28 +63,22 @@ namespace CliNet.Cores.Commands.Gcs
         {
             try
             {
-                using (Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp))
+                using (TcpClient client = new TcpClient(IpAddress, Port))
                 {
-                    IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(IpAddress), Port);
-                    sock.Connect(endPoint);
-                    sock.SendTimeout = Timeout;
-                    sock.ReceiveTimeout = Timeout;
+                    NetworkStream stream = client.GetStream();
+                    byte[] buffer = new byte[BUFFER_SIZE];
 
                     GetServerStateInfo requestInfo = new GetServerStateInfo();
 
                     string request = JsonConvert.SerializeObject(requestInfo);
                     Console.WriteLine($"보낸 명령:\n {request}");
 
-                    sock.Send(Encoding.ASCII.GetBytes(request), SocketFlags.None);
+                    byte[] dataArray = Encoding.UTF8.GetBytes(request);
+                    stream.Write(dataArray, 0, dataArray.Length);
 
-                    byte[] receiverBuff = new byte[BUFFER_SIZE];
-                    int receivedLength = sock.Receive(receiverBuff);
-
-                    string response = Encoding.Default.GetString(receiverBuff, 0, receivedLength);
-                    Console.WriteLine($"받은 명령:\n {response}");
-
-                    // 소켓 닫기.
-                    sock.Close();
+                    int bytesRead = stream.Read(buffer, 0, buffer.Length);
+                    string receivedMessage = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+                    Console.WriteLine($"받은 명령:\n {receivedMessage}");
                 }
             }
             catch (Exception ex)
