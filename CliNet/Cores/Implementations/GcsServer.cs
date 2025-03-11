@@ -140,25 +140,22 @@ namespace CliNet.Cores.Implementations
                 }
 
                 byte[] receivedBuffer = new byte[BUFFER_SIZE];
-                int receivedLength;
+                int receivedLength = stream.Read(receivedBuffer, 0, receivedBuffer.Length);
 
-                while ((receivedLength = stream.Read(receivedBuffer, 0, receivedBuffer.Length)) > 0 && token.IsCancellationRequested == false)
+                string requestString = Encoding.Default.GetString(receivedBuffer, 0, receivedLength);
+                Console.WriteLine($"클라이언트로부터 받은 요청:\n {requestString}");
+
+                object request = ParsePacket(requestString);
+                if (request != null)
                 {
-                    string requestString = Encoding.Default.GetString(receivedBuffer, 0, receivedLength);
-                    Console.WriteLine($"클라이언트로부터 받은 요청:\n {requestString}");
-
-                    object request = ParsePacket(requestString);
-                    if (request != null)
+                    object response = Request?.Invoke(request);
+                    if (response != null)
                     {
-                        object response = Request?.Invoke(request);
-                        if (response != null)
-                        {
-                            string responseString = JsonConvert.SerializeObject(response);
-                            Console.WriteLine($"클라이언트로 보내는 응답:\n {responseString}");
+                        string responseString = JsonConvert.SerializeObject(response);
+                        Console.WriteLine($"클라이언트로 보내는 응답:\n {responseString}");
 
-                            byte[] sendBuffer = Encoding.Default.GetBytes(responseString);
-                            stream.Write(sendBuffer, 0, sendBuffer.Length);
-                        }
+                        byte[] sendBuffer = Encoding.Default.GetBytes(responseString);
+                        stream.Write(sendBuffer, 0, sendBuffer.Length);
                     }
                 }
             }
