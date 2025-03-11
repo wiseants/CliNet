@@ -1,10 +1,12 @@
 # CliNet
 
 명령어를 통해 여러 가지 기능을 테스트할 수 있습니다.		
+
 명령어와 명령어의 인자는 도움말 명령을 통해 알 수 있습니다.		
 
 ## 명령어 실행 방식 
 1-1. CliNet.exe 파일을 실행합니다.		
+
 1-2. 명령어와 인자를 입력하여 지속적으로 명령을 실행할 수 있습니다.		
 		
 ## 1회성 실행 방식
@@ -16,7 +18,6 @@
 
 Visual Studio 2022에서 편집 및 빌드 진행.
 
-.NET Framework 4.6.1
-.NET Framework 4.6.2
+.NET Framework 4.6.1, .NET Framework 4.6.2
 
 Release|Any CPU 로 빌드.
