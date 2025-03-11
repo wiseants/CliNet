@@ -1,17 +1,12 @@
 ﻿using CliNet.Cores.Services;
 using CliNet.Models.Commands;
-using CliNet.Models.Commands.AiModule;
 using Common.Interfaces;
-using Nest;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace CliNet.Cores.Implementations
 {
@@ -139,30 +134,31 @@ namespace CliNet.Cores.Implementations
 
             using (NetworkStream stream = client.GetStream())
             {
+                token.Register(stream.Close);
+
                 if (stream.CanRead == false)
                 {
                     return;
                 }
 
-                byte[] buffer = new byte[BUFFER_SIZE];
+                byte[] receivedBuffer = new byte[BUFFER_SIZE];
                 int receivedLength;
-                string receivedData = string.Empty;
 
-                while ((receivedLength = stream.Read(buffer, 0, buffer.Length)) > 0 && token.IsCancellationRequested == false)
+                while ((receivedLength = stream.Read(receivedBuffer, 0, receivedBuffer.Length)) > 0 && token.IsCancellationRequested == false)
                 {
-                    receivedData = Encoding.ASCII.GetString(buffer, 0, receivedLength);
+                    string receivedString = Encoding.Default.GetString(receivedBuffer, 0, receivedLength);
 
-                    Console.WriteLine($"받은 명령:\n {receivedData}");
+                    Console.WriteLine($"받은 명령:\n {receivedString}");
 
-                    object request = ParsePacket(receivedData);
+                    object request = ParsePacket(receivedString);
                     if (request != null)
                     {
                         object response = Request?.Invoke(request);
                         if (response != null)
                         {
-                            byte[] sendBytes = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(response));
+                            byte[] sendBuffer = Encoding.Default.GetBytes(JsonConvert.SerializeObject(response));
 
-                            stream.Write(sendBytes, 0, sendBytes.Length);
+                            stream.Write(sendBuffer, 0, sendBuffer.Length);
                         }
                     }
                 }
