@@ -210,7 +210,6 @@ namespace CliNet.Cores.Implementations
         {
             SetEnableResponseInfo result = new SetEnableResponseInfo()
             {
-                SeqNo = request.SeqNo,
                 ReturnCode = 1,
             };
 
@@ -226,8 +225,6 @@ namespace CliNet.Cores.Implementations
         {
             GetConfigResponseInfo result = new GetConfigResponseInfo()
             {
-                SeqNo = request.SeqNo,
-                //IsEnable = Convert.ToBoolean(AppConfiguration.GetAppConfig(IS_ENALBE_KEY)),
                 ListenType = Convert.ToInt32(AppConfiguration.GetAppConfig(LISTEN_TYPE)),
                 ListenPortNo = Convert.ToInt32(AppConfiguration.GetAppConfig(LISTEN_PORT_NO)),
                 SendType = Convert.ToInt32(AppConfiguration.GetAppConfig(SEND_TYPE)),
@@ -248,7 +245,6 @@ namespace CliNet.Cores.Implementations
         {
             SetConfigResponseInfo result = new SetConfigResponseInfo()
             {
-                SeqNo = request.SeqNo,
                 ReturnCode = 1,
             };
 
@@ -265,7 +261,6 @@ namespace CliNet.Cores.Implementations
         {
             SendToResponseInfo result = new SendToResponseInfo()
             {
-                SeqNo = request.SeqNo,
                 ReturnCode = 1,
             };
 

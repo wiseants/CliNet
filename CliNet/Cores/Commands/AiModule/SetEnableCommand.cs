@@ -67,7 +67,6 @@ namespace CliNet.Cores.Commands.AiModule
 
                     SetEnableRequestInfo requestInfo = new SetEnableRequestInfo()
                     {
-                        SeqNo = SequenceManager.Instance.GetNext(),
                         IsEnable = IsEnable == 1
                     };
 

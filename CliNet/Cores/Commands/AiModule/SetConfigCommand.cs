@@ -96,7 +96,6 @@ namespace CliNet.Cores.Commands.AiModule
 
                     SetConfigRequestInfo requestInfo = new SetConfigRequestInfo()
                     {
-                        SeqNo = SequenceManager.Instance.GetNext(),
                         ListenType = ListenType,
                         ListenPortNo = ListenPortNo,
                         SendType = SendType,

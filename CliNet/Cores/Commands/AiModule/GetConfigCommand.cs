@@ -58,10 +58,7 @@ namespace CliNet.Cores.Commands.AiModule
                     sock.SendTimeout = Timeout;
                     sock.ReceiveTimeout = Timeout;
 
-                    GetConfigRequestInfo requestInfo = new GetConfigRequestInfo()
-                    {
-                        SeqNo = SequenceManager.Instance.GetNext(),
-                    };
+                    GetConfigRequestInfo requestInfo = new GetConfigRequestInfo();
 
                     string request = JsonConvert.SerializeObject(requestInfo);
                     Console.WriteLine($"보낸 명령:\n {request}");

@@ -22,16 +22,6 @@ namespace CliNet.Models.Commands
             set; 
         }
 
-        /// <summary>
-        /// 시퀀스 번호.
-        /// 요청과 응답이 동일한 값을 사용.
-        /// </summary>
-        public int SeqNo
-        {
-            get;
-            set;
-        }
-
         #endregion
 
         #region Override methods

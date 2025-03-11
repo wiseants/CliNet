@@ -97,9 +97,9 @@ namespace CliNet.Cores.Implementations
                 {
                     using(TcpClient client = listener.AcceptTcpClient())
                     {
-                        ListenAndResponse(client, token);
+                        token.Register(client.Close);
 
-                        client.Close();
+                        ListenAndResponse(client, token);
                     }
                 }
             }
@@ -130,8 +130,6 @@ namespace CliNet.Cores.Implementations
 
         private void ListenAndResponse(TcpClient client, CancellationToken token)
         {
-            token.Register(client.Close);
-
             using (NetworkStream stream = client.GetStream())
             {
                 token.Register(stream.Close);
