@@ -3,6 +3,7 @@ using CliNet.Cores.Managers;
 using CliNet.Interfaces;
 using CliNet.Models.Commands.AiModule;
 using CommandLine;
+using Newtonsoft.Json;
 using System;
 
 namespace CliNet.Cores.Commands.Gcs
@@ -61,8 +62,6 @@ namespace CliNet.Cores.Commands.Gcs
             };
             server.Request += (x) =>
             {
-                Console.WriteLine(x);
-
                 return new ServerStateInfo();
             };
 

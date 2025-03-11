@@ -148,19 +148,22 @@ namespace CliNet.Cores.Implementations
                 int receivedLength;
                 string receivedData = string.Empty;
 
-                while ((receivedLength = stream.Read(buffer, 0, buffer.Length)) != 0 && token.IsCancellationRequested == false)
+                while ((receivedLength = stream.Read(buffer, 0, buffer.Length)) > 0 && token.IsCancellationRequested == false)
                 {
                     receivedData = Encoding.ASCII.GetString(buffer, 0, receivedLength);
-                }
 
-                object request = ParsePacket(receivedData);
-                if (request != null)
-                {
-                    object response = Request?.Invoke(request);
-                    if (response != null)
+                    Console.WriteLine($"받은 명령:\n {receivedData}");
+
+                    object request = ParsePacket(receivedData);
+                    if (request != null)
                     {
-                        byte[] sendBytes = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(response));
-                        client.Client.Send(sendBytes, sendBytes.Length, SocketFlags.None);
+                        object response = Request?.Invoke(request);
+                        if (response != null)
+                        {
+                            byte[] sendBytes = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(response));
+
+                            stream.Write(sendBytes, 0, sendBytes.Length);
+                        }
                     }
                 }
             }
