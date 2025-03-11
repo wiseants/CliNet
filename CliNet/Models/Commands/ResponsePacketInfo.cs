@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Common;
+using Newtonsoft.Json;
 
 namespace CliNet.Models.Commands
 {
@@ -22,7 +23,7 @@ namespace CliNet.Models.Commands
         /// <summary>
         /// 요청 결과.
         /// </summary>
-        public int ResultCode
+        public RequestResult ResultCode
         { 
             get; 
             set; 

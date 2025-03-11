@@ -1,5 +1,6 @@
 ﻿using CliNet.Cores.Services;
 using CliNet.Models.Commands;
+using Common;
 using Common.Interfaces;
 using Newtonsoft.Json;
 using System;
@@ -116,13 +117,20 @@ namespace CliNet.Cores.Implementations
         {
             object receivedObject = null;
 
-            PacketInfo receivedPacket = JsonConvert.DeserializeObject<PacketInfo>(buffer);
-            if (receivedPacket != null)
+            try
             {
-                if (ContainerService.Instance.TryResolveType<PacketInfo>(receivedPacket.Name, out Type type))
+                PacketInfo receivedPacket = JsonConvert.DeserializeObject<PacketInfo>(buffer);
+                if (receivedPacket != null)
                 {
-                    receivedObject = JsonConvert.DeserializeObject(buffer, type);
+                    if (ContainerService.Instance.TryResolveType<PacketInfo>(receivedPacket.Name, out Type type))
+                    {
+                        receivedObject = JsonConvert.DeserializeObject(buffer, type);
+                    }
                 }
+            }
+            catch 
+            {
+                receivedObject = null;
             }
 
             return receivedObject;
@@ -145,20 +153,29 @@ namespace CliNet.Cores.Implementations
                 string requestString = Encoding.Default.GetString(receivedBuffer, 0, receivedLength);
                 Console.WriteLine($"클라이언트로부터 받은 요청:\n {requestString}");
 
+                object response = null;
+
                 object request = ParsePacket(requestString);
                 if (request != null)
                 {
-                    object response = (Request?.Invoke(request)) ?? new ResponsePacketInfo()
+                    response = (Request?.Invoke(request)) ?? new ResponsePacketInfo()
                     {
-                        ResultCode = 0
+                        ResultCode = RequestResult.InvalidRequest
                     };
-
-                    string responseString = JsonConvert.SerializeObject(response);
-                    Console.WriteLine($"클라이언트로 보내는 응답:\n {responseString}");
-
-                    byte[] sendBuffer = Encoding.Default.GetBytes(responseString);
-                    stream.Write(sendBuffer, 0, sendBuffer.Length);
                 }
+                else
+                {
+                    response = new ResponsePacketInfo()
+                    {
+                        ResultCode = RequestResult.ParsingError
+                    };
+                }
+
+                string responseString = JsonConvert.SerializeObject(response);
+                Console.WriteLine($"클라이언트로 보내는 응답:\n {responseString}");
+
+                byte[] sendBuffer = Encoding.Default.GetBytes(responseString);
+                stream.Write(sendBuffer, 0, sendBuffer.Length);
             }
         }
 

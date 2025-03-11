@@ -42,7 +42,10 @@ namespace CliNet.Cores.Services
 
             try
             {
-                type = Resolve<T>(keyword).GetType();
+                if (_container.IsRegistered<PacketInfo>(keyword))
+                {
+                    type = Resolve<T>(keyword).GetType();
+                }
             }
             catch { }
 

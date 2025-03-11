@@ -4,6 +4,7 @@ using CliNet.Interfaces;
 using CliNet.Models.Commands;
 using CliNet.Models.Commands.AiModule;
 using CommandLine;
+using Common;
 using System;
 
 namespace CliNet.Cores.Commands.Gcs
@@ -98,7 +99,7 @@ namespace CliNet.Cores.Commands.Gcs
             return new ServerStateInfo()
             {
                 State = Common.GcsState.Disarm,
-                ResultCode = 1
+                ResultCode = RequestResult.Success
             };
         }
 
@@ -124,7 +125,7 @@ namespace CliNet.Cores.Commands.Gcs
                 TargetLatitude = 37.27876,
                 TargetLongitude = 126.788549,
                 SlantRange = 1523,
-                ResultCode = 1
+                ResultCode = RequestResult.Success
             };
         }
 
@@ -132,7 +133,7 @@ namespace CliNet.Cores.Commands.Gcs
         {
             return new ResponsePacketInfo()
             {
-                ResultCode = 1
+                ResultCode = RequestResult.Success
             };
         }
 
