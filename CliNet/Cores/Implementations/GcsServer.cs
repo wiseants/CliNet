@@ -144,18 +144,19 @@ namespace CliNet.Cores.Implementations
 
                 while ((receivedLength = stream.Read(receivedBuffer, 0, receivedBuffer.Length)) > 0 && token.IsCancellationRequested == false)
                 {
-                    string receivedString = Encoding.Default.GetString(receivedBuffer, 0, receivedLength);
+                    string requestString = Encoding.Default.GetString(receivedBuffer, 0, receivedLength);
+                    Console.WriteLine($"클라이언트로부터 받은 요청:\n {requestString}");
 
-                    Console.WriteLine($"받은 명령:\n {receivedString}");
-
-                    object request = ParsePacket(receivedString);
+                    object request = ParsePacket(requestString);
                     if (request != null)
                     {
                         object response = Request?.Invoke(request);
                         if (response != null)
                         {
-                            byte[] sendBuffer = Encoding.Default.GetBytes(JsonConvert.SerializeObject(response));
+                            string responseString = JsonConvert.SerializeObject(response);
+                            Console.WriteLine($"클라이언트로 보내는 응답:\n {requestString}");
 
+                            byte[] sendBuffer = Encoding.Default.GetBytes(responseString);
                             stream.Write(sendBuffer, 0, sendBuffer.Length);
                         }
                     }
