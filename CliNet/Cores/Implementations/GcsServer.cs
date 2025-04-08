@@ -40,12 +40,6 @@ namespace CliNet.Cores.Implementations
 
         #region Properties
 
-        public string IpAddress
-        {
-            get;
-            set;
-        }
-
         public int Port
         {
             get;
@@ -89,7 +83,7 @@ namespace CliNet.Cores.Implementations
 
             try
             {
-                TcpListener listener = new TcpListener(IPAddress.Parse(IpAddress), Port);
+                TcpListener listener = new TcpListener(IPAddress.Any, Port);
                 listener.Start();
 
                 token.Register(listener.Stop);

@@ -79,7 +79,11 @@ namespace CliNet.Cores.Commands.Gcs
         {
             using (NetworkStream stream = client.GetStream())
             {
-                SetGoalInfo requestInfo = new SetGoalInfo();
+                SetGoalInfo requestInfo = new SetGoalInfo()
+                {
+                    GoalLatitude = 35.076574,
+                    GoalLongitude = 129.086404,
+                };
 
                 string requestString = JsonConvert.SerializeObject(requestInfo);
                 Console.WriteLine($"서버로 보내는 요청:\n {requestString}");

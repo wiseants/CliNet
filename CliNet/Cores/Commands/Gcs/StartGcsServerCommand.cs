@@ -30,13 +30,6 @@ namespace CliNet.Cores.Commands.Gcs
 
         public bool IsValid => true;
 
-        [Option('i', "ip", Required = false, HelpText = "로컬 서버 IP 주소.")]
-        public string IpAddress
-        {
-            get;
-            set;
-        } = "127.0.0.1";
-
         [Option('p', "port", Required = false, HelpText = "로컬 서버 포트 번호.")]
         public int Port
         {
@@ -58,7 +51,6 @@ namespace CliNet.Cores.Commands.Gcs
 
             GcsServer server = new GcsServer
             {
-                IpAddress = IpAddress,
                 Port = Port,
             };
             server.Request += (x) =>

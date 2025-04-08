@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 
 namespace CliNet.Cores.Commands.Gcs
 {
@@ -58,9 +59,14 @@ namespace CliNet.Cores.Commands.Gcs
         {
             try
             {
-                using (TcpClient client = new TcpClient(IpAddress, Port))
+                while (true)
                 {
-                    RequestAndListen(client);
+                    using (TcpClient client = new TcpClient(IpAddress, Port))
+                    {
+                        RequestAndListen(client);
+                    }
+
+                    Thread.Sleep(1000);
                 }
             }
             catch (Exception ex)
