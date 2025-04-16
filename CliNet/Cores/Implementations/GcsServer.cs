@@ -26,6 +26,8 @@ namespace CliNet.Cores.Implementations
         #region Fields
 
         private readonly int BUFFER_SIZE = 1024;
+        private readonly int TIMEOUT_MS = 2000;
+        private readonly int LOOP_DELAY = 100;
 
         private readonly Thread _thread;
         private CancellationTokenSource _cancellationTokenSource;
@@ -143,12 +145,12 @@ namespace CliNet.Cores.Implementations
             {
                 while (stopwatch.IsRunning)
                 {
-                    if (stopwatch.ElapsedMilliseconds > 2000)
+                    if (stopwatch.ElapsedMilliseconds > TIMEOUT_MS)
                     {
                         cancellationTokenSource.Cancel();
                     }
 
-                    Thread.Sleep(100);
+                    Thread.Sleep(LOOP_DELAY);
                 }
             });
 
@@ -172,36 +174,36 @@ namespace CliNet.Cores.Implementations
                         if (receivedLength > 0)
                         {
                             stopwatch.Restart();
-                        }
 
-                        string requestString = Encoding.Default.GetString(receivedBuffer, 0, receivedLength);
-                        Console.WriteLine($"클라이언트로부터 받은 요청:\n {requestString}");
+                            string requestString = Encoding.Default.GetString(receivedBuffer, 0, receivedLength);
+                            Console.WriteLine($"클라이언트로부터 받은 요청:\n {requestString}");
 
-                        object response = null;
+                            object response = null;
 
-                        object request = ParsePacket(requestString);
-                        if (request != null)
-                        {
-                            response = (Request?.Invoke(request)) ?? new ResponsePacketInfo()
+                            object request = ParsePacket(requestString);
+                            if (request != null)
                             {
-                                ResultCode = RequestResult.InvalidRequest
-                            };
-                        }
-                        else
-                        {
-                            response = new ResponsePacketInfo()
+                                response = (Request?.Invoke(request)) ?? new ResponsePacketInfo()
+                                {
+                                    ResultCode = RequestResult.InvalidRequest
+                                };
+                            }
+                            else
                             {
-                                ResultCode = RequestResult.ParsingError
-                            };
+                                response = new ResponsePacketInfo()
+                                {
+                                    ResultCode = RequestResult.ParsingError
+                                };
+                            }
+
+                            string responseString = JsonConvert.SerializeObject(response);
+                            Console.WriteLine($"클라이언트로 보내는 응답:\n {responseString}");
+
+                            byte[] sendBuffer = Encoding.Default.GetBytes(responseString);
+                            stream.Write(sendBuffer, 0, sendBuffer.Length);
                         }
 
-                        string responseString = JsonConvert.SerializeObject(response);
-                        Console.WriteLine($"클라이언트로 보내는 응답:\n {responseString}");
-
-                        byte[] sendBuffer = Encoding.Default.GetBytes(responseString);
-                        stream.Write(sendBuffer, 0, sendBuffer.Length);
-
-                        Thread.Sleep(100);
+                        Thread.Sleep(LOOP_DELAY);
                     }
                 }
                 catch (IOException) { }
@@ -212,6 +214,7 @@ namespace CliNet.Cores.Implementations
             }
 
             stopwatch.Stop();
+            Thread.Sleep(LOOP_DELAY * 2);
         }
 
         #endregion
