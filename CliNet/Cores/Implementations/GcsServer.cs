@@ -5,10 +5,12 @@ using Common.Interfaces;
 using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace CliNet.Cores.Implementations
 {
@@ -95,7 +97,7 @@ namespace CliNet.Cores.Implementations
                     {
                         token.Register(client.Close);
 
-                        ListenAndResponse(client, token);
+                        ListenAndResponse(client);
                     }
                 }
             }
@@ -131,8 +133,25 @@ namespace CliNet.Cores.Implementations
             return receivedObject;
         }
 
-        private void ListenAndResponse(TcpClient client, CancellationToken token)
+        private void ListenAndResponse(TcpClient client)
         {
+            CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+            CancellationToken token = cancellationTokenSource.Token;
+
+            Stopwatch stopwatch = new Stopwatch();
+            Task.Run(() => 
+            {
+                while (stopwatch.IsRunning)
+                {
+                    if (stopwatch.ElapsedMilliseconds > 2000)
+                    {
+                        cancellationTokenSource.Cancel();
+                    }
+
+                    Thread.Sleep(100);
+                }
+            });
+
             using (NetworkStream stream = client.GetStream())
             {
                 token.Register(stream.Close);
@@ -142,46 +161,57 @@ namespace CliNet.Cores.Implementations
                     return;
                 }
 
-                Stopwatch stopwatch = new Stopwatch();
                 stopwatch.Start();
 
-                do
+                try
                 {
-                    byte[] receivedBuffer = new byte[BUFFER_SIZE];
-                    int receivedLength = stream.Read(receivedBuffer, 0, receivedBuffer.Length);
-
-                    string requestString = Encoding.Default.GetString(receivedBuffer, 0, receivedLength);
-                    Console.WriteLine($"클라이언트로부터 받은 요청:\n {requestString}");
-
-                    object response = null;
-
-                    object request = ParsePacket(requestString);
-                    if (request != null)
+                    while (token.IsCancellationRequested == false)
                     {
-                        response = (Request?.Invoke(request)) ?? new ResponsePacketInfo()
+                        byte[] receivedBuffer = new byte[BUFFER_SIZE];
+                        int receivedLength = stream.Read(receivedBuffer, 0, receivedBuffer.Length);
+                        if (receivedLength > 0)
                         {
-                            ResultCode = RequestResult.InvalidRequest
-                        };
-                    }
-                    else
-                    {
-                        response = new ResponsePacketInfo()
+                            stopwatch.Restart();
+                        }
+
+                        string requestString = Encoding.Default.GetString(receivedBuffer, 0, receivedLength);
+                        Console.WriteLine($"클라이언트로부터 받은 요청:\n {requestString}");
+
+                        object response = null;
+
+                        object request = ParsePacket(requestString);
+                        if (request != null)
                         {
-                            ResultCode = RequestResult.ParsingError
-                        };
+                            response = (Request?.Invoke(request)) ?? new ResponsePacketInfo()
+                            {
+                                ResultCode = RequestResult.InvalidRequest
+                            };
+                        }
+                        else
+                        {
+                            response = new ResponsePacketInfo()
+                            {
+                                ResultCode = RequestResult.ParsingError
+                            };
+                        }
+
+                        string responseString = JsonConvert.SerializeObject(response);
+                        Console.WriteLine($"클라이언트로 보내는 응답:\n {responseString}");
+
+                        byte[] sendBuffer = Encoding.Default.GetBytes(responseString);
+                        stream.Write(sendBuffer, 0, sendBuffer.Length);
+
+                        Thread.Sleep(100);
                     }
-
-                    string responseString = JsonConvert.SerializeObject(response);
-                    Console.WriteLine($"클라이언트로 보내는 응답:\n {responseString}");
-
-                    byte[] sendBuffer = Encoding.Default.GetBytes(responseString);
-                    stream.Write(sendBuffer, 0, sendBuffer.Length);
-
-                    Thread.Sleep(100);
-                } while (stopwatch.ElapsedMilliseconds > 2000);
-
-                stopwatch.Stop();
+                }
+                catch (IOException) { }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"예외 발생: {ex.Message}");
+                }
             }
+
+            stopwatch.Stop();
         }
 
         #endregion
