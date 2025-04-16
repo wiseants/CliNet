@@ -4,6 +4,7 @@ using Common;
 using Common.Interfaces;
 using Newtonsoft.Json;
 using System;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -141,35 +142,45 @@ namespace CliNet.Cores.Implementations
                     return;
                 }
 
-                byte[] receivedBuffer = new byte[BUFFER_SIZE];
-                int receivedLength = stream.Read(receivedBuffer, 0, receivedBuffer.Length);
+                Stopwatch stopwatch = new Stopwatch();
+                stopwatch.Start();
 
-                string requestString = Encoding.Default.GetString(receivedBuffer, 0, receivedLength);
-                Console.WriteLine($"클라이언트로부터 받은 요청:\n {requestString}");
-
-                object response = null;
-
-                object request = ParsePacket(requestString);
-                if (request != null)
+                do
                 {
-                    response = (Request?.Invoke(request)) ?? new ResponsePacketInfo()
-                    {
-                        ResultCode = RequestResult.InvalidRequest
-                    };
-                }
-                else
-                {
-                    response = new ResponsePacketInfo()
-                    {
-                        ResultCode = RequestResult.ParsingError
-                    };
-                }
+                    byte[] receivedBuffer = new byte[BUFFER_SIZE];
+                    int receivedLength = stream.Read(receivedBuffer, 0, receivedBuffer.Length);
 
-                string responseString = JsonConvert.SerializeObject(response);
-                Console.WriteLine($"클라이언트로 보내는 응답:\n {responseString}");
+                    string requestString = Encoding.Default.GetString(receivedBuffer, 0, receivedLength);
+                    Console.WriteLine($"클라이언트로부터 받은 요청:\n {requestString}");
 
-                byte[] sendBuffer = Encoding.Default.GetBytes(responseString);
-                stream.Write(sendBuffer, 0, sendBuffer.Length);
+                    object response = null;
+
+                    object request = ParsePacket(requestString);
+                    if (request != null)
+                    {
+                        response = (Request?.Invoke(request)) ?? new ResponsePacketInfo()
+                        {
+                            ResultCode = RequestResult.InvalidRequest
+                        };
+                    }
+                    else
+                    {
+                        response = new ResponsePacketInfo()
+                        {
+                            ResultCode = RequestResult.ParsingError
+                        };
+                    }
+
+                    string responseString = JsonConvert.SerializeObject(response);
+                    Console.WriteLine($"클라이언트로 보내는 응답:\n {responseString}");
+
+                    byte[] sendBuffer = Encoding.Default.GetBytes(responseString);
+                    stream.Write(sendBuffer, 0, sendBuffer.Length);
+
+                    Thread.Sleep(100);
+                } while (stopwatch.ElapsedMilliseconds > 2000);
+
+                stopwatch.Stop();
             }
         }
 
