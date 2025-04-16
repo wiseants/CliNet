@@ -22,7 +22,7 @@ namespace CliNet.Models.Commands.AiModule
         /// <summary>
         /// 기체 자이로 센서 롤 값.
         /// </summary>
-        public float Role
+        public float Roll
         {
             get;
             set;

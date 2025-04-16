@@ -99,7 +99,7 @@ namespace CliNet.Cores.Commands.Gcs
         {
             return new VehicleStatusInfo()
             {
-                Role = 1.6F,
+                Roll = 1.6F,
                 Pitch = 2.4F,
                 Latitude = 37.293153,
                 Longitude = 126.813816,
