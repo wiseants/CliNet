@@ -115,6 +115,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constant.cs" />
+    <Compile Include="Cores\Commands\Gcs\GetUnlockKeyCommand.cs" />
     <Compile Include="Cores\Commands\Gcs\SetGoalCommand.cs" />
     <Compile Include="Cores\Commands\Gcs\GetVehicleStatusCommand.cs" />
     <Compile Include="Cores\Commands\Gcs\GetServerStateCommand.cs" />
